@@ -28,3 +28,29 @@ Sub UCSetup()
         .ColorIndex = xlAutomatic
         .TintAndShade = 0
     End With
+    ActiveSheet.Range("$A$1:$AH$9999").AutoFilter Field:=9, Criteria1:="STL19"
+    Sheets("Receivables Radius Export").Select
+    Sheets("Receivables Radius Export").Name = "UC"
+    Sheets("V3BD").Select
+    ActiveWindow.SelectedSheets.Delete
+    Sheets("UC").Select
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Columns("J:J").EntireColumn.AutoFit
+    Selection.NumberFormat = "0"
+    Range("J1").Select
+    Selection.FormulaArray = "PU Control"
+    Range("A1").Select
+    Application.DisplayAlerts = True
+End Sub
