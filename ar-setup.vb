@@ -55,3 +55,15 @@ Sub AR_Setup()
                 cell.ClearContents
             End If
         Next cell
+
+        ' Formatting--------------------------------------------------------------------------
+        With Cells 'Applies to all cells
+                .WrapText = False
+                .HorizontalAlignment = xlCenter
+                .VerticalAlignment = xlCenter
+                With .Borders
+                    .LineStyle = xlContinuous
+                    .Weight = xlThin ' Optional: set the weight of the borders
+                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                End With
+        End With
