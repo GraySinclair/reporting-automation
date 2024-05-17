@@ -98,3 +98,20 @@ Sub AR_Setup()
         .Columns("M:P").EntireColumn.Hidden = True
         .Columns("R:S").EntireColumn.Hidden = True
         .Columns("U:AF").EntireColumn.Hidden = True
+        
+        .Columns("AG").ColumnWidth = 30
+    End With 'END IT1 WITH  
+'----------------------------------------------------------------
+'CUSTOMER TOTALS
+'-----------------------------------------------------------------
+    Dim ct As Worksheet
+    Set ct = ActiveWorkbook.Sheets("Customer Totals")
+   
+    With ct
+        .Activate
+        ' COLUMN NAMES
+        .Cells(1, 5).Value = "RentCount"
+        .Cells(1, 15).Value = "LastPayment"
+        .Cells(1, 16).Value = "LastPayment"
+        .Cells(1, 20).Value = "BA Created"
+        .Cells(1, 22).Value = "BA Updated"
