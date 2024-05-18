@@ -115,3 +115,27 @@ Sub AR_Setup()
         .Cells(1, 16).Value = "LastPayment"
         .Cells(1, 20).Value = "BA Created"
         .Cells(1, 22).Value = "BA Updated"
+           
+        With .Columns
+            .Hidden = False
+            .ClearFormats
+            .AutoFit
+            .AutoFilter ' Needs to be deactivated on Mac Dev Environment
+        End With
+       
+        With .Columns("C")
+            .TextToColumns Destination:=.Cells(1, 1), DataType:=xlDelimited, _
+                TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, _
+                Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=False
+        End With
+       
+        With .Cells 'Applies to all cells
+                .WrapText = False
+                .HorizontalAlignment = xlCenter
+                .VerticalAlignment = xlCenter
+                With .Borders
+                    .LineStyle = xlContinuous
+                    .Weight = xlThin ' Optional: set the weight of the borders
+                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                End With
+        End With
