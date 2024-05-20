@@ -139,3 +139,32 @@ Sub AR_Setup()
                     .ColorIndex = xlAutomatic ' Optional: set the color of the borders
                 End With
         End With
+        With .Range("A1:V1")
+            .Font.Bold = True
+            .Interior.Color = RGB(128, 128, 128) ' Gray color
+        End With
+        .Columns("C").NumberFormat = "0" 'BA COLUMN
+        .Columns("F:L").NumberFormat = "$#,##0.00"
+        .Columns("O").NumberFormat = "mm/dd/yy"
+        .Columns("P").NumberFormat = "$#,##0.00"
+        .Columns("R").NumberFormat = "$#,##0.00"
+        .Columns("T").NumberFormat = "mm/dd/yy"
+        .Columns("V").NumberFormat = "mm/dd/yy"
+       
+        'Move Data
+        .Columns("G").Cut
+        .Columns("V").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("K").Cut
+        .Columns("V").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("M:N").Cut
+        .Columns("J").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("N:Q").Cut
+        .Columns("V").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("M").ColumnWidth = 30
+        .Columns("X").ColumnWidth = 10
+        .Columns("T").ColumnWidth = 30
+        .Columns("B").EntireColumn.Hidden = True
+        .Columns("Q:W").EntireColumn.Hidden = True
+        .Columns("M").HorizontalAlignment = xlLeft
+       
+ 
