@@ -166,5 +166,23 @@ Sub AR_Setup()
         .Columns("B").EntireColumn.Hidden = True
         .Columns("Q:W").EntireColumn.Hidden = True
         .Columns("M").HorizontalAlignment = xlLeft
-       
+        
+        Dim lastPayment As String
+        Dim balance As Double
+        Dim updateText As String
+ 
+        ' Format balance and payment date
+        balance = Application.WorksheetFunction.Sum(.Range("I2:J2"))
+        lastPayment = ". Last payment: " & Format(.Range("K2").Value, "mm/dd") & " for " & Format(.Range("L2").Value, "$#,##0.00")
+        updateText = ". Update: "
+ 
+        .Range("M2").Formula = _
+        "= ""As of "" & TEXT(TODAY(), ""mm/dd"") & "", account has "" & E2 & "" vehicles. 61+ Balance: "" & TEXT(SUM(I2:J2), ""#,##0.00"") & "". Last Payment: "" & TEXT(K2, ""mm/dd"") & "" for "" & TEXT(L2, ""#,##0.00"") & "" Update: """
+        Dim lastAcc As Long
+        Dim conversationRange As Range
+        lastAcc = ct.Cells(ct.Rows.Count, "B").End(xlUp).Row - 1
+        Set conversationRange = .Range("M2:M" & lastAcc)
+        conversationRange.FillDown
+        conversationRange.Value = conversationRange.Value
+    End With 'End ct With
  
