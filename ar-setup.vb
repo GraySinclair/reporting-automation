@@ -185,4 +185,23 @@ Sub AR_Setup()
         conversationRange.FillDown
         conversationRange.Value = conversationRange.Value
     End With 'End ct With
+ '----------------------------------------------------------------------
+'                              Credits                                '
+'----------------------------------------------------------------------
+    Dim cr As Worksheet
+    Set cr = ActiveWorkbook.Sheets("Credits")
+   
+    With cr
+        .Activate
+        'Format Removal
+'        With Columns("A:AG")
+'            .ClearFormats
+'        End With
+        ' COLUMN NAMES
+        .Cells(1, 1).Value = "Unit"
+        .Cells(1, 9).Value = "Last Bill Ref"
+        .Cells(1, 11).Value = "OdyNum"
+        'Text to col which helps make data consistent and removes white spaces.
  
+        columnsToFormat = Array("D", "F", "G", "H", "I", "J", "K", "W", "X", "AF")
+       
