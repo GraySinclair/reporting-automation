@@ -205,3 +205,31 @@ Sub AR_Setup()
  
         columnsToFormat = Array("D", "F", "G", "H", "I", "J", "K", "W", "X", "AF")
        
+       For Each col In columnsToFormat
+            With .Columns(col)
+                .TextToColumns Destination:=.Cells(1, 1), DataType:=xlDelimited, _
+                    TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, _
+                    Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=False
+            End With
+        Next col
+       
+        ' Notes xLookup --------------------------------------------------------------------------------
+        Dim lastcr As Long
+        Dim crRange As Range
+       
+        lastcr = cr.Cells(cr.Rows.Count, "F").End(xlUp).Row
+        Set crRange = .Range("AG2:AG" & lastcr)
+        .Range("AG2").FormulaR1C1 = "=XLOOKUP(RC[-27],ITEMS!C[-27],ITEMS!C,0)"
+        crRange.FillDown
+        ' Formatting--------------------------------------------------------------------------
+        With Cells 'Applies to all cells
+                .WrapText = False
+                .HorizontalAlignment = xlCenter
+                .VerticalAlignment = xlCenter
+                With .Borders
+                    .LineStyle = xlContinuous
+                    .Weight = xlThin ' Optional: set the weight of the borders
+                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                End With
+        End With
+           
