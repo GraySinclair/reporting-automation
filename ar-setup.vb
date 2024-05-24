@@ -248,3 +248,21 @@ Sub AR_Setup()
             .Interior.Color = RGB(128, 128, 128) ' Gray color
         End With
         .Columns("AG").HorizontalAlignment = xlLeft
+        'Move Data
+        .Columns("K").Cut
+        .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("R:S").Cut
+        .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("S:U").Cut
+        .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("S:T").Cut
+        .Columns("N").Offset(0, 1).Insert Shift:=xlToRight
+   
+        'Hide columns
+        .Columns("C").EntireColumn.Hidden = True
+        .Columns("M:P").EntireColumn.Hidden = True
+        .Columns("R:S").EntireColumn.Hidden = True
+        .Columns("U:AF").EntireColumn.Hidden = True
+       
+        .Columns("AG").ColumnWidth = 30
+    End With 'END CR WITH
