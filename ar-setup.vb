@@ -233,3 +233,18 @@ Sub AR_Setup()
                 End With
         End With
            
+        .Columns("H:I").NumberFormat = "0"
+        .Columns("P:R").NumberFormat = "mm/dd/yy"
+        .Columns("S:U").NumberFormat = "$#,##0.00"
+        .Columns("AA:AD").NumberFormat = "$#,##0.00"
+'        .Range("F2:F" & lastcr).Interior.Color = RGB(0, 0, 128)
+        With Columns
+            .AutoFit
+            .AutoFilter ' Needs to be deactivated on Mac Dev Environment
+        End With
+       
+        With .Range("A1:AG1")
+            .Font.Bold = True
+            .Interior.Color = RGB(128, 128, 128) ' Gray color
+        End With
+        .Columns("AG").HorizontalAlignment = xlLeft
