@@ -266,3 +266,32 @@ Sub AR_Setup()
        
         .Columns("AG").ColumnWidth = 30
     End With 'END CR WITH
+    Dim sheetNames As Variant
+    Dim sheetName As Variant
+    Dim ws As Worksheet
+    Dim wsfr As Worksheet
+   
+    ' List of sheets to delete
+    sheetNames = Array("ITEMS (2)", "Top 20 60+Previous")
+   
+    ' Loop through each sheet name in the array
+    For Each sheetName In sheetNames
+        On Error Resume Next ' Ignore errors if the sheet doesn't exist
+        Set ws = ActiveWorkbook.Sheets(sheetName)
+        If Not ws Is Nothing Then
+            ws.Delete ' Delete the sheet
+        End If
+        On Error GoTo 0 ' Turn error handling back on
+    Next sheetName
+   
+    'applied to all worksheets
+    For Each wsfr In ActiveWorkbook.Sheets
+        With wsfr
+            .Activate ' Activate the sheet
+            ActiveWindow.FreezePanes = False ' Unfreeze any existing frozen panes
+            .Rows("2:2").Select ' Select the row to freeze
+            ActiveWindow.FreezePanes = True ' Apply the freeze panes setting
+            ActiveWindow.Zoom = 85 ' Set the zoom level to 85%
+            .Range("A1").Select
+        End With
+    Next wsfr
