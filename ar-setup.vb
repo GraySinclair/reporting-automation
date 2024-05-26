@@ -295,3 +295,11 @@ Sub AR_Setup()
             .Range("A1").Select
         End With
     Next wsfr
+    it1.Activate
+'--------------------------------------------------------------------------------
+'CLEANUP
+'--------------------------------------------------------------------------------
+    Application.DisplayAlerts = True
+    'Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+End Sub
