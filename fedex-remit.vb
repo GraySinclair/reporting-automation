@@ -21,3 +21,19 @@
         .Columns("G").NumberFormat = "#,##0.00"
         .Columns("H").NumberFormat = "@"
         .Columns("I:J").NumberFormat = "#,##0.00"
+
+         With .Columns("A") 'FieldInfo:=Array(Array(0, 2)... The "0" represents where the data begins aka where the TTC will split the data the "2" represents the data output. (Options- 1=General, 2=Text(string), 3=Date(if applicable))
+            .TextToColumns Destination:=.Cells(1, 3), DataType:=xlFixedWidth, _
+                FieldInfo:=Array(Array(0, 2), Array(4, 2), Array(10, 2)), _
+                TrailingMinusNumbers:=True
+        End With
+       
+        .Cells(2, 3).Value = "GPBR"
+        .Cells(2, 4).Value = "Ticket #"
+        .Cells(2, 5).Value = "Submission Type"
+       
+        With Cells 'Applies to all cells
+            .WrapText = False
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
