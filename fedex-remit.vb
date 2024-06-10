@@ -37,3 +37,23 @@
             .HorizontalAlignment = xlCenter
             .VerticalAlignment = xlCenter
         End With
+        
+        
+        
+        .Cells(2, 12).Value = "Notes"
+' Copy formatting from column K to column L
+        .Columns("K").Copy
+        .Columns("L").PasteSpecial Paste:=xlPasteFormats
+        .Columns("K").NumberFormat = "#,##0.00"
+        .Columns("L").NumberFormat = "@"
+       
+        ' Clear the clipboard to avoid the "marching ants" border
+        Application.CutCopyMode = False
+   
+        Dim sumRange As Double
+        Dim targetCell As Range
+        Dim formattedSum As String
+       
+        ' Set the target cell where the output will be written
+        Set targetCell = aws.Range("L3")
+   
