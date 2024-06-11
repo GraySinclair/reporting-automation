@@ -38,8 +38,6 @@
             .VerticalAlignment = xlCenter
         End With
         
-        
-        
         .Cells(2, 12).Value = "Notes"
 ' Copy formatting from column K to column L
         .Columns("K").Copy
@@ -57,3 +55,19 @@
         ' Set the target cell where the output will be written
         Set targetCell = aws.Range("L3")
    
+        ' Find the last row in column K with data minus total row
+        lastRowk = aws.Cells(Rows.Count, "K").End(xlUp).Row - 1
+   
+        ' Calculate the sum of the range K3:K(lastRowk)
+        sumRange = Application.WorksheetFunction.Sum(aws.Range("K3:K" & lastRowk))
+        formattedSum = Format(sumRange, "$#,##0.00")
+       
+        ' Create the output string
+        targetCell.Value = "Fwd2ASKSSbyGray: " & Format(Date, "mm/dd/yy") & " - Amt:" & formattedSum
+        .Range("L3:L" & lastRowk).FillDown
+       
+        With .Columns
+            .AutoFit
+        End With
+       
+    End With
