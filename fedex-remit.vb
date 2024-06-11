@@ -71,3 +71,41 @@
         End With
        
     End With
+
+        Dim targetWorkbook As Workbook
+        Dim targetSheet As Worksheet
+        Dim lastRow As Long
+        Dim lastRowToCopy As Long
+        Dim targetLastRow As Long
+   
+        ' Find the last row in the source sheet
+        lastRow = aws.Cells(aws.Rows.Count, 1).End(xlUp).Row
+   
+        ' Define the range to copy (from row 3 to the last row)
+        lastRowToCopy = lastRow - 2 ' Subtracting 2 to start from row 3
+   
+        ' Open the target workbook
+        Set targetWorkbook = Workbooks.Open("W:\Corporate DB Program\Account Specialists\Gray\FedEx\Payment Archive\FedexPmtHist.xlsx")
+   
+        ' Set the target sheet (assuming you want to copy to the first sheet)
+        Set targetSheet = targetWorkbook.Sheets(1)
+   
+        ' Find the last row in the target sheet
+        targetLastRow = targetSheet.Cells(targetSheet.Rows.Count, 1).End(xlUp).Row + 1
+   
+        ' Copy the range from the source sheet to the target sheet
+        aws.Rows("3:" & lastRow).Copy Destination:=targetSheet.Rows(targetLastRow)
+   
+        ' Optional: Save and close the target workbook
+        targetWorkbook.Save
+        targetWorkbook.Close
+   
+'Cleanup --------------------------------------------------------------------------
+        Set targetSheet = Nothing
+        Set targetWorkbook = Nothing
+        Set aws = Nothing
+        Application.DisplayAlerts = True
+        Application.ScreenUpdating = True
+        'Application.Calculation = xlCalculationManual
+        'MsgBox "Rows copied successfully!"
+End Sub
