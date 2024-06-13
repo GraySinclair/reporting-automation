@@ -13,3 +13,21 @@ Sub TollConsolidation()
        
         ' Delete the first 9 rows in the source sheet
         wsSource.Rows("1:9").Delete
+       
+        ' Find the last row in the destination sheet
+        lastRowDest = wsDest.Cells(wsDest.Rows.Count, "E").End(xlUp).Row
+       
+        ' Copy data from columns A to T in the source sheet to the bottom of the destination sheet
+        wsSource.Range("A1:T" & wsSource.Cells(wsSource.Rows.Count, "E").End(xlUp).Row).Copy _
+            Destination:=wsDest.Range("A" & lastRowDest + 1)
+    Next i
+    'Format Section
+    Sheets("Sheet1").Select
+    Sheets("Sheet1").Move
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    Sheets("Sheet1").Range("A1").Select
+End Sub
