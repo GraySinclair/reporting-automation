@@ -4,7 +4,12 @@ Sub TollConsolidation()
     Dim lastRowDest As Long
     Dim i As Integer
    
- 
+    ' TODO: 
+    ' prevent enterprise logo from being copied over during loop
+    ' use filepath to consolidate all files in folder instead of dropping all files into 1 workbook requirement
+    '
+    '
+
     ' Built by Gray Sinclair - E66CVG
     ' Loop through each sheet starting from sheet 2
     For i = 2 To Sheets.Count
