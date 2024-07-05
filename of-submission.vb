@@ -59,3 +59,17 @@ Sub OF_Submission()
             .Columns.AutoFilter 'Disable on mac dev environment
             .Columns.AutoFit
         End With
+     
+        ' Format columns
+        .Range("O:Q").NumberFormat = "$#,##0.00"
+        .Range("O:Q").HorizontalAlignment = xlCenter
+        .Range("R2:V2").HorizontalAlignment = xlLeft
+        .Range("R2:V2").Font.Italic = True
+      
+        ' Format the header row (assuming it's row 1)
+        With .Range("A1:V1")
+            .Interior.Color = RGB(192, 192, 192) ' Gray color
+            .Font.Bold = False ' Make header text bold
+        End With
+    End With
+'END OF NEW SHEET SETUP------------------------------------------------------------------------------
