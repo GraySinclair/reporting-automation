@@ -73,3 +73,24 @@ Sub OF_Submission()
         End With
     End With
 'END OF NEW SHEET SETUP------------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+'ITEMS 1                                                                  |
+'--------------------------------------------------------------------------
+    'New Code
+    Dim lastrowinb As Long
+    Dim row2 As Long
+    Dim i As Long
+  
+    ' Find the last row in column B
+    lastrowinb = it1.Cells(it1.Rows.Count, "B").End(xlUp).Row
+    row2 = 2
+   
+    'Leave ITEMS sheet filtered post-run macro
+   
+        
+        
+        it1.ShowAllData 'Testif this works otherwise add ActiveSheet.
+        it1.Range("A1").AutoFilter Field:=2, Criteria1:="XZ4312Y"
+        'Check to see if there are visible cells in the filtered range
+        it1.Range("A1").AutoFilter Field:=33, Criteria1:="="
+   
