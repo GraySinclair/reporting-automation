@@ -93,4 +93,22 @@ Sub OF_Submission()
         it1.Range("A1").AutoFilter Field:=2, Criteria1:="XZ4312Y"
         'Check to see if there are visible cells in the filtered range
         it1.Range("A1").AutoFilter Field:=33, Criteria1:="="
-   
+    ' Loop through each row
+    For i = 1 To lastrowinb
+        ' Check if column B contains "XZ4312Y" and column AG is blank
+        If it1.Cells(i, "B").Value = "XZ4312Y" And it1.Cells(i, "AG").Value = "" Then
+            ' Copy BA#s from column D to column J in OFS
+            OFS.Cells(row2, "J").Value = it1.Cells(i, "D").Value
+            ' Copy tickets
+            OFS.Cells(row2, "K").Value = it1.Cells(i, "F").Value
+            ' Copy amt
+            OFS.Cells(row2, "O").Value = it1.Cells(i, "T").Value
+            ' Copy amt
+            OFS.Cells(row2, "P").Value = it1.Cells(i, "T").Value
+            ' Copy amt
+            OFS.Cells(row2, "Q").Value = it1.Cells(i, "T").Value
+            'Write notes in notes column 'NEED TO ADD OF SUB NUMBER ----------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            'it1.Cells(i, "AG").Value = "OF Submission " & Format(Date, "mm.dd.yy")
+            row2 = row2 + 1 ' Move to the next row in OFS
+        End If
+    Next i
