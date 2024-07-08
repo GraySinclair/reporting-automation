@@ -112,3 +112,31 @@ Sub OF_Submission()
             row2 = row2 + 1 ' Move to the next row in OFS
         End If
     Next i
+
+    Dim lastofsrow As Long
+    lastofsrow = OFS.Cells(OFS.Rows.Count, "K").End(xlUp).Row
+    Dim arr() As Variant
+   
+    arr = Array("A", "B", "N", "R", "V")
+   
+    If lastofsrow >= 2 Then
+        For Each Item In arr
+            OFS.Range(Item & "2").AutoFill Destination:=OFS.Range(Item & "2:" & Item & lastofsrow), Type:=xlFillCopy
+        Next Item
+    End If
+   
+    Dim lookupValue As String
+    Dim result As Variant
+    Dim closedFilePath As String
+    Dim closedWorkbook As Workbook
+    Dim sheetName As String
+    Dim lookupRange As Range
+    Dim returnRange As Range
+    'Dim i As Long
+    Dim wb As Workbook
+   
+    Set wb = Workbooks(1)
+    ' Set the lookup value
+    lookupValue = ActiveWorkbook.Sheets("OF Submission").Range("J2").Value ' Adjust to your sheet and cell
+    closedFilePath = "C:\Users\e66cvg\OneDrive - EHI\Desktop\Tophat Acc List.xlsx" ' Adjust the path
+    sheetName = "XZ4312Y(IC)" 
