@@ -140,3 +140,30 @@ Sub OF_Submission()
     lookupValue = ActiveWorkbook.Sheets("OF Submission").Range("J2").Value ' Adjust to your sheet and cell
     closedFilePath = "C:\Users\e66cvg\OneDrive - EHI\Desktop\Tophat Acc List.xlsx" ' Adjust the path
     sheetName = "XZ4312Y(IC)" 
+
+    ' Open the closed workbook
+    Set closedWorkbook = Workbooks.Open(closedFilePath, ReadOnly:=False)
+ 
+    ' Set the lookup range and return range
+    Set lookupRange = closedWorkbook.Sheets(sheetName).Range("BH:BH")
+    Set returnRange = closedWorkbook.Sheets(sheetName).Range("DM:DP")
+ 
+    ' Loop through each row in column J
+    For i = 2 To lastRow ' Start from row 2, adjust if necessary
+        lookupValue = ActiveWorkbook.Sheets("OF Submission").Cells(i, "J").Value
+ 
+        ' Perform the lookup using Application.WorksheetFunction
+        On Error Resume Next
+        result = Application.WorksheetFunction.XLookup(lookupValue, lookupRange, returnRange, Array("Not Found", "Not Found", "Not Found", "Not Found"))
+        On Error GoTo 0
+ 
+        ' Output the result in columns E, F, G, and H
+        If IsArray(result) Then
+            Dim j As Long
+            For j = LBound(result) To UBound(result)
+                ActiveWorkbook.Sheets("OF Submission").Cells(i, "E").Offset(0, j).Value = result(j)
+            Next j
+        Else
+            ActiveWorkbook.Sheets("OF Submission").Cells(i, "E").Value = result
+        End If
+    Next i
