@@ -167,3 +167,51 @@ Sub OF_Submission()
             ActiveWorkbook.Sheets("OF Submission").Cells(i, "E").Value = result
         End If
     Next i
+
+      
+'    ' Perform the lookup using Application.WorksheetFunction
+'    On Error Resume Next
+'    result = Application.WorksheetFunction.XLookup(lookupValue, lookupRange, returnRange, "Not Found")
+'    On Error GoTo 0
+'
+'    ' Check for errors and output the result
+'    OFS.Range("E2:H2").Value = result ' Adjust to your output cell
+ 
+ 
+    ' Close the closed workbook
+    closedWorkbook.Close SaveChanges:=False
+ 
+'    With OFS
+'    'TOPHAT INFO XLOOKUPS
+'        Range("E2:H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!BH:BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!DM:DP, 0)"
+'        Range("E2:H2").AutoFill Destination:=OFS.Range("H" & lastofsrow), Type:=xlFillCopy
+'    End With
+   
+    
+'Ignore until code is finished
+    With OFS
+        .Cells.Copy
+        .Cells.PastSpecial Paste:=xlPasteValues
+        Application.CutCopyMode = False
+        .Columns("J").Delete
+        With Range("E:H")
+            .Columns.AutoFit
+        End With
+    End With
+    Dim OFSbook As Workbook
+    Set OFSbook = Workbooks.Add
+    OFS.Move After:=ActiveWorkbook.Sheets(1)
+    it1.Activate
+    OFSbook.Sheets(1).Delete
+   
+    'MsgBox "Save file in archive"
+    'Open the Save As dialog
+    Application.Dialogs(xlDialogSaveAs).Show
+  
+'--------------------------------------------------------------------------------
+'CLEANUP                                                                        |
+'--------------------------------------------------------------------------------
+    Application.DisplayAlerts = True
+    'Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+End Sub
