@@ -4,14 +4,12 @@ Sub OF_Submission()
   
 ' PreWork --------------------------------------------------------------------------
     Application.DisplayAlerts = False
-    Application.ScreenUpdating = True
-    'Application.Calculation = xlCalculationManual
-  
+    Application.ScreenUpdating = False 'Turn True while testing step by step
     Set it1 = ActiveWorkbook.Worksheets("ITEMS")
 '--------------------------------------------------------------------------
 'OF Submission                                                            |
 '--------------------------------------------------------------------------
-    'Create worksheet named "OF Submission" if it doesn't exist
+    'Create ws named "OF Submission" if it doesn't exist
     If OFS Is Nothing Then
         On Error Resume Next
         ActiveWorkbook.Sheets("OF Submission").Delete
@@ -19,7 +17,7 @@ Sub OF_Submission()
         OFS.Name = "OF Submission"
     End If
 ' OF report setup
-    ' Set column headers in "OF Submission" worksheet
+    ' Set column headers
     With OFS
         .Cells.Clear  ' Clear existing content in case of macro rerun
       
@@ -53,7 +51,7 @@ Sub OF_Submission()
         .Cells(2, 22).Value = "cmsclientid"
       
         With .Range("A:V")
-            ' Change font to Calibri for the entire column range
+            ' unify font for the entire column range
             .Font.Name = "Calibri"
             .Font.Size = 11
             .Columns.AutoFilter 'Disable on mac dev environment
@@ -68,26 +66,24 @@ Sub OF_Submission()
       
         ' Format the header row (assuming it's row 1)
         With .Range("A1:V1")
-            .Interior.Color = RGB(192, 192, 192) ' Gray color
-            .Font.Bold = False ' Make header text bold
+            .Interior.Color = RGB(192, 192, 192) ' Grayish color
+            .Font.Bold = False
         End With
     End With
-'END OF NEW SHEET SETUP------------------------------------------------------------------------------
+'END SETUP------------------------------------------------------------------------------
+
 '--------------------------------------------------------------------------
 'ITEMS 1                                                                  |
 '--------------------------------------------------------------------------
-    'New Code
     Dim lastrowinb As Long
     Dim row2 As Long
     Dim i As Long
   
-    ' Find the last row in column B
+    ' Find the last row
     lastrowinb = it1.Cells(it1.Rows.Count, "B").End(xlUp).Row
     row2 = 2
    
     'Leave ITEMS sheet filtered post-run macro
-   
-        
         
         it1.ShowAllData 'Testif this works otherwise add ActiveSheet.
         it1.Range("A1").AutoFilter Field:=2, Criteria1:="XZ4312Y"
@@ -107,7 +103,7 @@ Sub OF_Submission()
             OFS.Cells(row2, "P").Value = it1.Cells(i, "T").Value
             ' Copy amt
             OFS.Cells(row2, "Q").Value = it1.Cells(i, "T").Value
-            'Write notes in notes column 'NEED TO ADD OF SUB NUMBER ----------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            'Write notes in notes column 'TODO: NEED TO ADD OF SUB NUMBER 
             'it1.Cells(i, "AG").Value = "OF Submission " & Format(Date, "mm.dd.yy")
             row2 = row2 + 1 ' Move to the next row in OFS
         End If
@@ -132,7 +128,6 @@ Sub OF_Submission()
     Dim sheetName As String
     Dim lookupRange As Range
     Dim returnRange As Range
-    'Dim i As Long
     Dim wb As Workbook
    
     Set wb = Workbooks(1)
@@ -204,9 +199,7 @@ Sub OF_Submission()
     it1.Activate
     OFSbook.Sheets(1).Delete
    
-    'MsgBox "Save file in archive"
-    'Open the Save As dialog
-    Application.Dialogs(xlDialogSaveAs).Show
+    'Application.Dialogs(xlDialogSaveAs).Show
   
 '--------------------------------------------------------------------------------
 'CLEANUP                                                                        |
