@@ -3,11 +3,13 @@ Sub AR_Setup()
 ' AR Setup Macro
 '
 ' TO DO:
- 
+'
+'
+'
+
 ' PreWork --------------------------------------------------------------------------
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
-    'Application.Calculation = xlCalculationManual
    
 '--------------------------------------------------------------------------
 'ITEMS 1
@@ -17,7 +19,7 @@ Sub AR_Setup()
     With it1
         .Activate
  
-        'Format Removal
+        'test processing time with format removal for tolls macro
 '        With Columns("A:AG")
 '            .ClearFormats
 '        End With
@@ -26,7 +28,7 @@ Sub AR_Setup()
         .Cells(1, 1).Value = "Unit"
         .Cells(1, 9).Value = "Last Bill Ref"
         .Cells(1, 11).Value = "OdyNum"
-        'Text to col which helps make data consistent and removes white spaces.
+        'Text to col to make data consistent and removes white spaces.
         Dim columnsToFormat As Variant
         Dim col As Variant
  
@@ -49,7 +51,7 @@ Sub AR_Setup()
         .Range("AG2").Formula = "=XLOOKUP(RC[-27],'ITEMS (2)'!C[-27],'ITEMS (2)'!C,0)"
         noteRange.FillDown
         noteRange.Value = noteRange.Value
-        ' delete cells in notes column that were not pulled from yesterdays file aka 0's
+        ' delete cells in notes column that were not pulled from yesterdays file (nulls)
         For Each cell In noteRange
             If cell.Value = 0 Then
                 cell.ClearContents
@@ -57,14 +59,14 @@ Sub AR_Setup()
         Next cell
 
         ' Formatting--------------------------------------------------------------------------
-        With Cells 'Applies to all cells
+        With Cells
                 .WrapText = False
                 .HorizontalAlignment = xlCenter
                 .VerticalAlignment = xlCenter
                 With .Borders
                     .LineStyle = xlContinuous
-                    .Weight = xlThin ' Optional: set the weight of the borders
-                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                    .Weight = xlThin
+                    .ColorIndex = xlAutomatic
                 End With
         End With
 
@@ -83,6 +85,7 @@ Sub AR_Setup()
             .Interior.Color = RGB(128, 128, 128) ' Gray color
         End With
         .Columns("AG").HorizontalAlignment = xlLeft
+        
         'Move Data
         .Columns("K").Cut
         .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
@@ -100,8 +103,9 @@ Sub AR_Setup()
         .Columns("U:AF").EntireColumn.Hidden = True
         
         .Columns("AG").ColumnWidth = 30
-    End With 'END IT1 WITH  
-'----------------------------------------------------------------
+    End With 'End With for IT1
+
+
 'CUSTOMER TOTALS
 '-----------------------------------------------------------------
     Dim ct As Worksheet
@@ -109,7 +113,7 @@ Sub AR_Setup()
    
     With ct
         .Activate
-        ' COLUMN NAMES
+        ' column headers
         .Cells(1, 5).Value = "RentCount"
         .Cells(1, 15).Value = "LastPayment"
         .Cells(1, 16).Value = "LastPayment"
@@ -129,14 +133,14 @@ Sub AR_Setup()
                 Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=False
         End With
        
-        With .Cells 'Applies to all cells
+        With .Cells
                 .WrapText = False
                 .HorizontalAlignment = xlCenter
                 .VerticalAlignment = xlCenter
                 With .Borders
                     .LineStyle = xlContinuous
-                    .Weight = xlThin ' Optional: set the weight of the borders
-                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                    .Weight = xlThin
+                    .ColorIndex = xlAutomatic
                 End With
         End With
         With .Range("A1:V1")
@@ -170,12 +174,12 @@ Sub AR_Setup()
         Dim lastPayment As String
         Dim balance As Double
         Dim updateText As String
- 
+
         ' Format balance and payment date
         balance = Application.WorksheetFunction.Sum(.Range("I2:J2"))
         lastPayment = ". Last payment: " & Format(.Range("K2").Value, "mm/dd") & " for " & Format(.Range("L2").Value, "$#,##0.00")
         updateText = ". Update: "
- 
+
         .Range("M2").Formula = _
         "= ""As of "" & TEXT(TODAY(), ""mm/dd"") & "", account has "" & E2 & "" vehicles. 61+ Balance: "" & TEXT(SUM(I2:J2), ""#,##0.00"") & "". Last Payment: "" & TEXT(K2, ""mm/dd"") & "" for "" & TEXT(L2, ""#,##0.00"") & "" Update: """
         Dim lastAcc As Long
@@ -184,9 +188,9 @@ Sub AR_Setup()
         Set conversationRange = .Range("M2:M" & lastAcc)
         conversationRange.FillDown
         conversationRange.Value = conversationRange.Value
-    End With 'End ct With
- '----------------------------------------------------------------------
-'                              Credits                                '
+    End With 'End With for CTs
+
+'                              Credits                                
 '----------------------------------------------------------------------
     Dim cr As Worksheet
     Set cr = ActiveWorkbook.Sheets("Credits")
@@ -201,7 +205,6 @@ Sub AR_Setup()
         .Cells(1, 1).Value = "Unit"
         .Cells(1, 9).Value = "Last Bill Ref"
         .Cells(1, 11).Value = "OdyNum"
-        'Text to col which helps make data consistent and removes white spaces.
  
         columnsToFormat = Array("D", "F", "G", "H", "I", "J", "K", "W", "X", "AF")
        
@@ -222,17 +225,17 @@ Sub AR_Setup()
         .Range("AG2").FormulaR1C1 = "=XLOOKUP(RC[-27],ITEMS!C[-27],ITEMS!C,0)"
         crRange.FillDown
         ' Formatting--------------------------------------------------------------------------
-        With Cells 'Applies to all cells
+        With Cells
                 .WrapText = False
                 .HorizontalAlignment = xlCenter
                 .VerticalAlignment = xlCenter
                 With .Borders
                     .LineStyle = xlContinuous
-                    .Weight = xlThin ' Optional: set the weight of the borders
-                    .ColorIndex = xlAutomatic ' Optional: set the color of the borders
+                    .Weight = xlThin
+                    .ColorIndex = xlAutomatic
                 End With
         End With
-           
+
         .Columns("H:I").NumberFormat = "0"
         .Columns("P:R").NumberFormat = "mm/dd/yy"
         .Columns("S:U").NumberFormat = "$#,##0.00"
@@ -242,12 +245,13 @@ Sub AR_Setup()
             .AutoFit
             .AutoFilter ' Needs to be deactivated on Mac Dev Environment
         End With
-       
+
         With .Range("A1:AG1")
             .Font.Bold = True
             .Interior.Color = RGB(128, 128, 128) ' Gray color
         End With
         .Columns("AG").HorizontalAlignment = xlLeft
+        
         'Move Data
         .Columns("K").Cut
         .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
@@ -257,29 +261,30 @@ Sub AR_Setup()
         .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
         .Columns("S:T").Cut
         .Columns("N").Offset(0, 1).Insert Shift:=xlToRight
-   
+
         'Hide columns
         .Columns("C").EntireColumn.Hidden = True
         .Columns("M:P").EntireColumn.Hidden = True
         .Columns("R:S").EntireColumn.Hidden = True
         .Columns("U:AF").EntireColumn.Hidden = True
-       
+
         .Columns("AG").ColumnWidth = 30
-    End With 'END CR WITH
+    End With 'End With for Cr
+
     Dim sheetNames As Variant
     Dim sheetName As Variant
     Dim ws As Worksheet
     Dim wsfr As Worksheet
-   
-    ' List of sheets to delete
+
+    ' Array of sheets to delete(make sure alerts are off!)
     sheetNames = Array("ITEMS (2)", "Top 20 60+Previous")
-   
+
     ' Loop through each sheet name in the array
     For Each sheetName In sheetNames
         On Error Resume Next ' Ignore errors if the sheet doesn't exist
         Set ws = ActiveWorkbook.Sheets(sheetName)
         If Not ws Is Nothing Then
-            ws.Delete ' Delete the sheet
+            ws.Delete
         End If
         On Error GoTo 0 ' Turn error handling back on
     Next sheetName
@@ -288,18 +293,17 @@ Sub AR_Setup()
     For Each wsfr In ActiveWorkbook.Sheets
         With wsfr
             .Activate ' Activate the sheet
-            ActiveWindow.FreezePanes = False ' Unfreeze any existing frozen panes
+            ActiveWindow.FreezePanes = False ' Unfreeze any existing frozen panes in case of manual setting
             .Rows("2:2").Select ' Select the row to freeze
-            ActiveWindow.FreezePanes = True ' Apply the freeze panes setting
-            ActiveWindow.Zoom = 85 ' Set the zoom level to 85%
+            ActiveWindow.FreezePanes = True ' Reapply the freeze panes setting
+            ActiveWindow.Zoom = 85
             .Range("A1").Select
         End With
     Next wsfr
     it1.Activate
-'--------------------------------------------------------------------------------
+
 'CLEANUP
 '--------------------------------------------------------------------------------
     Application.DisplayAlerts = True
-    'Application.Calculation = xlCalculationAutomatic
     Application.ScreenUpdating = True
 End Sub
