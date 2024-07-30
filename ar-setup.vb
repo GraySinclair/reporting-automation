@@ -11,9 +11,8 @@ Sub AR_Setup()
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
    
-'--------------------------------------------------------------------------
-'ITEMS 1
-'------------------------------------------------------------------------
+
+'ITEMS 1 ------------------------------------------------------------------------
     Dim it1 As Worksheet
     Set it1 = ActiveWorkbook.Sheets("ITEMS")
     With it1
@@ -106,8 +105,7 @@ Sub AR_Setup()
     End With 'End With for IT1
 
 
-'CUSTOMER TOTALS
-'-----------------------------------------------------------------
+'CUSTOMER TOTALS -----------------------------------------------------------------
     Dim ct As Worksheet
     Set ct = ActiveWorkbook.Sheets("Customer Totals")
    
@@ -190,8 +188,7 @@ Sub AR_Setup()
         conversationRange.Value = conversationRange.Value
     End With 'End With for CTs
 
-'                              Credits                                
-'----------------------------------------------------------------------
+' Credits ----------------------------------------------------------------------
     Dim cr As Worksheet
     Set cr = ActiveWorkbook.Sheets("Credits")
    
@@ -302,8 +299,7 @@ Sub AR_Setup()
     Next wsfr
     it1.Activate
 
-'CLEANUP
-'--------------------------------------------------------------------------------
+'CLEANUP --------------------------------------------------------------------------------
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
 End Sub
