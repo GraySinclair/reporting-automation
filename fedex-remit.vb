@@ -1,12 +1,8 @@
 ' PreWork --------------------------------------------------------------------------
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
-    'Application.Calculation = xlCalculationManual
-   
-'--------------------------------------------------------------------------
-'FedEx Remit                                                              '
-'--------------------------------------------------------------------------
-   
+
+'FedEx Remit --------------------------------------------------------------------------
     Dim aws As Worksheet
     Set aws = ActiveWorkbook.ActiveSheet
    
@@ -32,7 +28,7 @@
         .Cells(2, 4).Value = "Ticket #"
         .Cells(2, 5).Value = "Submission Type"
        
-        With Cells 'Applies to all cells
+        With Cells
             .WrapText = False
             .HorizontalAlignment = xlCenter
             .VerticalAlignment = xlCenter
@@ -44,7 +40,7 @@
         .Columns("L").PasteSpecial Paste:=xlPasteFormats
         .Columns("K").NumberFormat = "#,##0.00"
         .Columns("L").NumberFormat = "@"
-       
+
         ' Clear the clipboard to avoid the "marching ants" border
         Application.CutCopyMode = False
    
@@ -64,7 +60,7 @@
        
         ' Create the output string
         targetCell.Value = "Fwd2ASKSSbyGray: " & Format(Date, "mm/dd/yy") & " - Amt:" & formattedSum
-        .Range("L3:L" & lastRowk).FillDown
+        .Range("L3:L" & lastRowk).FillDown 'TODO: known issue if only single item in remit
        
         With .Columns
             .AutoFit
@@ -84,28 +80,26 @@
         ' Define the range to copy (from row 3 to the last row)
         lastRowToCopy = lastRow - 2 ' Subtracting 2 to start from row 3
    
-        ' Open the target workbook
+        ' target workbook
         Set targetWorkbook = Workbooks.Open("W:\Corporate DB Program\Account Specialists\Gray\FedEx\Payment Archive\FedexPmtHist.xlsx")
    
         ' Set the target sheet (assuming you want to copy to the first sheet)
         Set targetSheet = targetWorkbook.Sheets(1)
    
-        ' Find the last row in the target sheet
+        ' Find the last row in the target sheet to prevent overwriting data
         targetLastRow = targetSheet.Cells(targetSheet.Rows.Count, 1).End(xlUp).Row + 1
    
         ' Copy the range from the source sheet to the target sheet
         aws.Rows("3:" & lastRow).Copy Destination:=targetSheet.Rows(targetLastRow)
    
-        ' Optional: Save and close the target workbook
+        ' Save and close the target workbook
         targetWorkbook.Save
         targetWorkbook.Close
-   
+
 'Cleanup --------------------------------------------------------------------------
         Set targetSheet = Nothing
         Set targetWorkbook = Nothing
         Set aws = Nothing
         Application.DisplayAlerts = True
         Application.ScreenUpdating = True
-        'Application.Calculation = xlCalculationManual
-        'MsgBox "Rows copied successfully!"
 End Sub
