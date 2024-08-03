@@ -1,13 +1,10 @@
 Sub UCSetup()
 '
 ' UC SETUP
+' TODO: change over from select statements to direct action on cells to speed up macro performance
 '
- 
-'
-    'Prefix
     Application.DisplayAlerts = False
-   
-    '
+
     Sheets("Receivables Radius Export").Select
     ActiveWorkbook.Worksheets("Receivables Radius Export").AutoFilter.Sort. _
         SortFields.Clear
