@@ -3,9 +3,9 @@ Sub TollConsolidation()
     Dim wsDest As Worksheet
     Dim lastRowDest As Long
     Dim i As Integer
-   
+
     ' TODO: 
-    ' prevent enterprise logo from being copied over during loop
+    ' prevent enterprise logo from being copied over during loop - Followup with Christopher Torres for detailed bug report
     ' use filepath to consolidate all files in folder instead of dropping all files into 1 workbook requirement
     '
     '
@@ -15,17 +15,18 @@ Sub TollConsolidation()
     For i = 2 To Sheets.Count
         Set wsSource = Sheets(i)
         Set wsDest = Sheets(1)
-       
-        ' Delete the first 9 rows in the source sheet
+
+        ' Delete the first 9 junk rows in the source sheet
         wsSource.Rows("1:9").Delete
-       
-        ' Find the last row in the destination sheet
+
+        ' Find the last row in the destination sheet to prevent data overwrite
         lastRowDest = wsDest.Cells(wsDest.Rows.Count, "E").End(xlUp).Row
-       
-        ' Copy data from columns A to T in the source sheet to the bottom of the destination sheet
+
+        ' Copy data from columns A:T in the source sheet to the bottom of the destination sheet
         wsSource.Range("A1:T" & wsSource.Cells(wsSource.Rows.Count, "E").End(xlUp).Row).Copy _
             Destination:=wsDest.Range("A" & lastRowDest + 1)
     Next i
+
     'Format Section
     Sheets("Sheet1").Select
     Sheets("Sheet1").Move
