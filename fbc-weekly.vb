@@ -44,3 +44,12 @@ Sub FBC_Report()
         Set copyRange = .SpecialCells(xlCellTypeVisible) 'TODO: change from visible cells to requirement based on filters
         On Error GoTo 0
     End With
+
+    ' If there are visible cells, copy them to FBC Data sheet
+    If Not copyRange Is Nothing Then
+        copyRange.Copy
+        wsFBCData.Cells(1, 1).PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+    End If
+
+'TODO: FBC report formatting and functions
