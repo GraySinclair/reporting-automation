@@ -162,3 +162,24 @@ Sub FBC_Report()
         .Cells(30, 3).Value = "Holsum Bakery (Phoenix)"
         .Cells(31, 3).Value = "Lepage Bakery"
         .Cells(32, 3).Value = "Tasty"
+
+        With .Range("A1:J1")
+            .Interior.Color = RGB(192, 192, 192) ' Gray color
+            .Font.Bold = True ' Make header text bold
+        End With
+
+        With .Range("E2:I32")
+            .NumberFormat = "_($* #,##0.00_);_($* (#,##0.00);_($* ""-""??_);_(@_)"
+        End With
+
+        'FBC Report Data Calculations
+        '--------------------On Rent Count
+        Range("D2").FormulaR1C1 = "=XLOOKUP(RC[-2], 'Customer Totals'!C[-1], 'Customer Totals'!C[1], 0)"
+        Range("D2:D32").FillDown
+        '--------------------Bal Amt Sum
+        Range("E2").FormulaR1C1 = "=SUM(RC[1]:RC[4])"
+        Range("E2:E32").FillDown
+        '--------------------1-30 Days
+        Range("F2").Formula = "=SUMIFS('FBC Data'!$M:$M, 'FBC Data'!$C:$C, ""="" & 'FBC Report'!$B2, 'FBC Data'!$L:$L, "">"" & TODAY() - 31)"
+        Range("F2:F32").FillDown
+' TODO: continue making aging buckets
