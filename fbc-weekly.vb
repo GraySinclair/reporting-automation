@@ -182,4 +182,21 @@ Sub FBC_Report()
         '--------------------1-30 Days
         Range("F2").Formula = "=SUMIFS('FBC Data'!$M:$M, 'FBC Data'!$C:$C, ""="" & 'FBC Report'!$B2, 'FBC Data'!$L:$L, "">"" & TODAY() - 31)"
         Range("F2:F32").FillDown
-' TODO: continue making aging buckets
+        '--------------------31-60 Days
+        Range("G2").Formula = "=SUMIFS('FBC DATA'!$M:$M, 'FBC DATA'!$C:$C, ""="" & 'FBC Report'!$B2, 'FBC DATA'!$L:$L, "">="" & (TODAY() - 60), 'FBC DATA'!$L:$L, ""<="" & (TODAY() - 31))"
+        Range("G2:G32").FillDown
+        '--------------------61-90 Days
+        Range("H2").Formula = "=SUMIFS('FBC DATA'!$M:$M, 'FBC DATA'!$C:$C, ""="" & 'FBC Report'!$B2, 'FBC DATA'!$L:$L, "">="" & (TODAY() - 90), 'FBC DATA'!$L:$L, ""<="" & (TODAY() - 60))"
+        Range("H2:H32").FillDown
+        '--------------------91+ Days
+        Range("I2").Formula = "=SUMIFS('FBC DATA'!$M:$M, 'FBC DATA'!$C:$C, ""="" & 'FBC Report'!$B2, 'FBC DATA'!$L:$L, ""<"" & (TODAY() - 90))"
+        Range("I2:I32").FillDown
+
+        With .Range("A:J")
+            ' Change font
+            .Font.Name = "Calibri"
+            .Font.Size = 11
+            .Columns.AutoFilter
+            .Columns.AutoFit
+        End With
+    End With
