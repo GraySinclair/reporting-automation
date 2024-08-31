@@ -200,3 +200,12 @@ Sub FBC_Report()
             .Columns.AutoFit
         End With
     End With
+
+    'Formatting BA#s for Xlookup
+    With Sheets("Customer Totals").Columns("C:C")
+    .TextToColumns Destination:=.Cells(1, 1), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=True, _
+        Semicolon:=False, Comma:=False, Space:=False, Other:=False, FieldInfo _
+        :=Array(1, 1), TrailingMinusNumbers:=True
+    End With
+End Sub
