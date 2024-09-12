@@ -43,3 +43,28 @@ Sub PU()
                     .ColorIndex = xlAutomatic
             End With
         End With
+
+        .Columns("A").ColumnWidth = 28
+        .Columns("B").ColumnWidth = 17
+        .Columns("C").ColumnWidth = 26
+        .Columns("D:F").ColumnWidth = 13
+        .Columns("G").ColumnWidth = 19
+        .Columns("H").ColumnWidth = 13
+
+        With .Cells
+            .WrapText = False
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+        End With
+
+        With .Range("A5:H5")
+            .WrapText = True
+            .Interior.Color = RGB(128, 128, 128) ' Gray color
+            .Font.Bold = True
+        End With
+
+        .Columns("A:D").NumberFormat = "@"
+        .Columns("E").NumberFormat = "0"
+        .Columns("F").NumberFormat = "$#,##0.00"
+        .Columns("G:H").NumberFormat = "@"
+    End With 'End PU Sheet
