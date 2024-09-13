@@ -68,3 +68,18 @@ Sub PU()
         .Columns("F").NumberFormat = "$#,##0.00"
         .Columns("G:H").NumberFormat = "@"
     End With 'End PU Sheet
+
+    ' Find the last row in column F
+    lastRow = itemsheet.Cells(itemsheet.Rows.Count, "F").End(xlUp).Row
+    ' Set the destination starting row in "PU"
+    destRow = 6
+
+    With itemsheet
+        For Each cell In itemsheet.Range("AG1:AG" & lastRow)
+            If cell.Value = "test" Then
+                puSheet.Cells(destRow, "G").Value = itemsheet.Cells(cell.Row, "F").Value
+                destRow = destRow + 1
+            End If
+        Next cell
+    End With
+End Sub
