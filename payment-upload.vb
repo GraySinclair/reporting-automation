@@ -82,4 +82,16 @@ Sub PU()
             End If
         Next cell
     End With
+'    TURN OFF UNTIL FIXED@@@@@
+'    Clear previous data in column G from row 6
+'    puSheet.Range("G6:G" & puSheet.Cells(Rows.Count, "G").End(xlUp).Row).ClearContents
+
+'    ' Loop through each cell in column AG
+'    For Each cell In ThisWorkbook.Sheets(1).Range("AG1:AG" & lastRow)
+'        If cell.Value = "test" Then
+'            ' Copy corresponding value from column F to column G in "PU"
+'            puSheet.Cells(destRow, "G").Value = ThisWorkbook.Sheets(1).Cells(cell.Row, "F").Value
+'            destRow = destRow + 1
+'        End If
+'    Next cell
 End Sub
