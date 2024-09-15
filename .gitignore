@@ -26,8 +26,11 @@ coverage/
 
 auto*
 
-#ignore xl files
+#ignore test xl files before data scrub
 *.xl*
 
 #ignore accounting files
 accounting-file/
+
+#ignore req file
+requirements.txt
