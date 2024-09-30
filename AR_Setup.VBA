@@ -3,7 +3,7 @@ Sub AR_Setup()
 ' AR Setup Macro
 '
 ' TO DO:
-' Color Code Cells based on aging buckets 
+ 
 ' PreWork --------------------------------------------------------------------------
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
@@ -16,11 +16,12 @@ Sub AR_Setup()
     Set it1 = ActiveWorkbook.Sheets("ITEMS")
     With it1
         .Activate
-       
+ 
         'Format Removal
-        With Columns("A:AG")
-            .ClearFormats
-        End With
+'        With Columns("A:AG")
+'            .ClearFormats
+'        End With
+ 
         ' COLUMN NAMES
         .Cells(1, 1).Value = "Unit"
         .Cells(1, 9).Value = "Last Bill Ref"
@@ -99,9 +100,34 @@ Sub AR_Setup()
         .Columns("U:AF").EntireColumn.Hidden = True
        
         .Columns("AG").ColumnWidth = 30
-       
     End With 'END IT1 WITH
- 
+   
+    
+'        Dim lastDate As Long
+'        Dim i As Long
+'        Dim todayDate As Date
+'
+'        lastDate = it1.Cells(it1.Rows.Count, "Q").End(xlUp).Row
+'        todayDate = Date
+'
+'        For i = 1 To lastDate
+'            If IsDate(it1.Cells(i, "Q").Value) Then
+'                Select Case it1.Cells(i, "Q").Value
+'                    Case Is < todayDate - 365
+'                        it1.Cells(i, "F").Interior.Color = RGB(0, 255, 0)      'Green
+'                    Case Is < todayDate - 90
+'                        it1.Cells(i, "F").Interior.Color = RGB(255, 0, 0)      'Red
+'                    Case Is < todayDate - 61
+'                        it1.Cells(i, "F").Interior.Color = RGB(255, 165, 0)      'Orange
+'                    Case Is < todayDate - 30
+'                        it1.Cells(i, "F").Interior.Color = RGB(255, 255, 0)      'Yellow
+'                    Case Else
+'                        it1.Cells(i, "F").Interior.ColorIndex = xlNone      'Clear color if not met
+'                End Select
+'            End If
+'        Next i
+   
+  
 '----------------------------------------------------------------
 'CUSTOMER TOTALS
 '-----------------------------------------------------------------
@@ -196,9 +222,9 @@ Sub AR_Setup()
     With cr
         .Activate
         'Format Removal
-        With Columns("A:AG")
-            .ClearFormats
-        End With
+'        With Columns("A:AG")
+'            .ClearFormats
+'        End With
         ' COLUMN NAMES
         .Cells(1, 1).Value = "Unit"
         .Cells(1, 9).Value = "Last Bill Ref"
@@ -239,7 +265,7 @@ Sub AR_Setup()
         .Columns("P:R").NumberFormat = "mm/dd/yy"
         .Columns("S:U").NumberFormat = "$#,##0.00"
         .Columns("AA:AD").NumberFormat = "$#,##0.00"
-       
+'        .Range("F2:F" & lastcr).Interior.Color = RGB(0, 0, 128)
         With Columns
             .AutoFit
             .AutoFilter ' Needs to be deactivated on Mac Dev Environment
@@ -256,7 +282,7 @@ Sub AR_Setup()
         .Columns("R:S").Cut
         .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
         .Columns("S:U").Cut
-       .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
+        .Columns("AF").Offset(0, 1).Insert Shift:=xlToRight
         .Columns("S:T").Cut
         .Columns("N").Offset(0, 1).Insert Shift:=xlToRight
    
