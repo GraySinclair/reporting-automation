@@ -1,16 +1,31 @@
 Sub Fedex_Remit()
+' PreWork --------------------------------------------------------------------------
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+    'Application.Calculation = xlCalculationManual
+   
+'--------------------------------------------------------------------------
+'FedEx Remit                                                              '
+'--------------------------------------------------------------------------
+   
     Dim aws As Worksheet
     Set aws = ActiveWorkbook.ActiveSheet
    
-    Application.DisplayAlerts = False
     With aws
         .Range("B1:H1").UnMerge
         ' Insert 3 blank columns at Column A
         .Columns("C:E").Insert Shift:=xlToRight
        
-        With .Columns("A")
+        .Columns("A").NumberFormat = "@"
+        .Columns("B").NumberFormat = "mmm dd, yyyy"
+        .Columns("C:F").NumberFormat = "@"
+        .Columns("G").NumberFormat = "#,##0.00"
+        .Columns("H").NumberFormat = "@"
+        .Columns("I:J").NumberFormat = "#,##0.00"
+       
+        With .Columns("A") 'FieldInfo:=Array(Array(0, 2)... The "0" represents where the data begins aka where the TTC will split the data the "2" represents the data output. (Options- 1=General, 2=Text(string), 3=Date(if applicable))
             .TextToColumns Destination:=.Cells(1, 3), DataType:=xlFixedWidth, _
-                FieldInfo:=Array(Array(0, 1), Array(4, 1), Array(10, 1)), _
+                FieldInfo:=Array(Array(0, 2), Array(4, 2), Array(10, 2)), _
                 TrailingMinusNumbers:=True
         End With
        
@@ -24,14 +39,15 @@ Sub Fedex_Remit()
             .VerticalAlignment = xlCenter
         End With
        
-        .Columns("E").NumberFormat = "@"
-        .Columns("B").NumberFormat = "mmm dd, yyyy"
-       
+        
+        
         .Cells(2, 12).Value = "Notes"
-            ' Copy formatting from column K to column L
+' Copy formatting from column K to column L
         .Columns("K").Copy
         .Columns("L").PasteSpecial Paste:=xlPasteFormats
-   
+        .Columns("K").NumberFormat = "#,##0.00"
+        .Columns("L").NumberFormat = "@"
+       
         ' Clear the clipboard to avoid the "marching ants" border
         Application.CutCopyMode = False
    
@@ -56,6 +72,7 @@ Sub Fedex_Remit()
         With .Columns
             .AutoFit
         End With
+       
     End With
  
         Dim targetWorkbook As Workbook
@@ -86,12 +103,12 @@ Sub Fedex_Remit()
         targetWorkbook.Save
         targetWorkbook.Close
    
-        ' Clean up
+'Cleanup --------------------------------------------------------------------------
         Set targetSheet = Nothing
         Set targetWorkbook = Nothing
         Set aws = Nothing
-       
-        
         Application.DisplayAlerts = True
+        Application.ScreenUpdating = True
+        'Application.Calculation = xlCalculationManual
         'MsgBox "Rows copied successfully!"
 End Sub
