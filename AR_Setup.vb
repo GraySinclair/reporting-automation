@@ -100,34 +100,7 @@ Sub AR_Setup()
         .Columns("U:AF").EntireColumn.Hidden = True
        
         .Columns("AG").ColumnWidth = 30
-    End With 'END IT1 WITH
-   
-    
-'        Dim lastDate As Long
-'        Dim i As Long
-'        Dim todayDate As Date
-'
-'        lastDate = it1.Cells(it1.Rows.Count, "Q").End(xlUp).Row
-'        todayDate = Date
-'
-'        For i = 1 To lastDate
-'            If IsDate(it1.Cells(i, "Q").Value) Then
-'                Select Case it1.Cells(i, "Q").Value
-'                    Case Is < todayDate - 365
-'                        it1.Cells(i, "F").Interior.Color = RGB(0, 255, 0)      'Green
-'                    Case Is < todayDate - 90
-'                        it1.Cells(i, "F").Interior.Color = RGB(255, 0, 0)      'Red
-'                    Case Is < todayDate - 61
-'                        it1.Cells(i, "F").Interior.Color = RGB(255, 165, 0)      'Orange
-'                    Case Is < todayDate - 30
-'                        it1.Cells(i, "F").Interior.Color = RGB(255, 255, 0)      'Yellow
-'                    Case Else
-'                        it1.Cells(i, "F").Interior.ColorIndex = xlNone      'Clear color if not met
-'                End Select
-'            End If
-'        Next i
-   
-  
+    End With 'END IT1 WITH  
 '----------------------------------------------------------------
 'CUSTOMER TOTALS
 '-----------------------------------------------------------------
