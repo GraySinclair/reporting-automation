@@ -1,49 +1,28 @@
 Sub OF_Submission()
-    Dim wb As Workbook
-    Dim wsOFSubmission As Worksheet
-    Dim wsItems As Worksheet
-    Dim headerRow As Range
-    Dim copyTickets As Range
-    Dim copyBas As Range
-    Dim copyAmt As Range
-    Dim lastRow As Long
-    Dim colARange As Range
-    Dim colBRange As Range
-    Dim colNRange As Range
-    Dim colRRange As Range
-    Dim colVRange As Range
-    Dim colERange As Range
-    Dim colFRange As Range
-    Dim colGRange As Range
-    Dim colHRange As Range
-'------------------------
-    Dim tomorrowDate As String
-    Dim noterange As Range
+    Dim it1 As Worksheet
+    Dim OFS As Worksheet
    
-    ' Set reference to the workbook
-    Set wb = ActiveWorkbook
+' PreWork --------------------------------------------------------------------------
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+    'Application.Calculation = xlCalculationManual
    
-    ' Set references
-    Set wsOFSubmission = Nothing
-    On Error Resume Next
-    Set wsOFSubmission = wb.Sheets("OF Submission")
-    On Error GoTo 0
-    Set wsItems = Nothing
-    On Error Resume Next
-    Set wsItems = ActiveWorkbook.Worksheets("ITEMS")
-    On Error GoTo 0
-   
-    Set headerRow = wsItems.Range("A1:AG1")
-    
-    ' Create worksheet "OF Submission" if it doesn't exist
-    If wsOFSubmission Is Nothing Then
-        Set wsOFSubmission = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count))
-        wsOFSubmission.Name = "OF Submission"
+    Set it1 = ActiveWorkbook.Sheets("ITEMS")
+'--------------------------------------------------------------------------
+'OF Submission                                                            |
+'--------------------------------------------------------------------------
+    'Create worksheet named "OF Submission" if it doesn't exist
+    If OFS Is Nothing Then
+        On Error Resume Next
+        ActiveWorkbook.Sheets("OF Submission").Delete
+        Set OFS = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
+        OFS.Name = "OF Submission"
     End If
-   
+ 
+' OF report setup
     ' Set column headers in "OF Submission" worksheet
-    With wsOFSubmission
-        .Cells.Clear  ' Clear existing content
+    With OFS
+        .Cells.Clear  ' Clear existing content in case of macro rerun
        
         ' Set column headers
         .Cells(1, 1).Value = "Program Name"
@@ -78,7 +57,7 @@ Sub OF_Submission()
             ' Change font to Calibri for the entire column range
             .Font.Name = "Calibri"
             .Font.Size = 11
-            .Columns.AutoFilter
+            .Columns.AutoFilter 'Disable on mac dev environment
             .Columns.AutoFit
         End With
        
@@ -94,114 +73,96 @@ Sub OF_Submission()
             .Font.Bold = False ' Make header text bold
         End With
     End With
-    'END OF SHEET SETUP------------------------------------------------------------------------------
+'END OF NEW SHEET SETUP------------------------------------------------------------------------------
+'--------------------------------------------------------------------------
+'ITEMS 1                                                                  |
+'--------------------------------------------------------------------------
+    'New Code
+    Dim lastrowinb As Long
+    Dim row2 As Long
+    Dim i As Long
    
-    With wsItems.Range("$A$1:$AG$9999")
-   
+    ' Find the last row in column B
+    lastrowinb = it1.Cells(it1.Rows.Count, "B").End(xlUp).Row
+    row2 = 2
+    
+    'Leave ITEMS sheet filtered post-run macro
+    With it1
         On Error Resume Next
-        ActiveSheet.ShowAllData
- 
-'-------------------------------------------COPY FILTERS----------------------------------------
+        .ShowAllData 'Testif this works otherwise add ActiveSheet.
         .AutoFilter Field:=2, Criteria1:="XZ4312Y"
         'Check to see if there are visible cells in the filtered range
         On Error Resume Next
         .AutoFilter Field:=33, Criteria1:="="
         On Error Resume Next
-       
-'--------------------------ERRRRR@@@@@@@@@@
-        ' Get tomorrow's date
-        'tomorrowDate = Format(Date + 1, "mm.dd.yy")  ' Adjust date format as needed
-   
-        'Set noterange = .Offset(1).Columns("AG").SpecialCells(xlCellTypeVisible)
-        'On Error GoTo 0
-        ' Write the string to cell AH1
-        'noterange.Value = "OF Submission #1xx " & tomorrowDate
-'-------------------------------------------COPY TICKETS----------------------------------------
-        Set copyTickets = .Resize(.Rows.Count - 1).Offset(1).Columns("F").SpecialCells(xlCellTypeVisible)
-        On Error GoTo 0
-        ' Copy visible cells to destination sheet starting at K2
-        copyTickets.Copy
-       wsOFSubmission.Range("K2").PasteSpecial Paste:=xlPasteValues
-        ' Clear clipboard to avoid memory issues
-        Application.CutCopyMode = False
-       
-'-------------------------------------------COPY BA#S----------------------------------------
-        Set copyBas = .Resize(.Rows.Count - 1).Offset(1).Columns("D").SpecialCells(xlCellTypeVisible)
-        On Error GoTo 0
-        ' Copy visible cells to destination sheet starting at J2
-        copyBas.Copy
-        wsOFSubmission.Range("J2").PasteSpecial Paste:=xlPasteValues
-        Application.CutCopyMode = False
- 
-'-------------------------------------------COPY AMT----------------------------------------
-        Set copyAmt = .Resize(.Rows.Count - 1).Offset(1).Columns("V").SpecialCells(xlCellTypeVisible)
-        On Error GoTo 0
-        ' Copy visible cells to destination sheet starting at O2
-        copyAmt.Copy
-        wsOFSubmission.Range("O2").PasteSpecial Paste:=xlPasteValues
-        wsOFSubmission.Range("P2").PasteSpecial Paste:=xlPasteValues
-        wsOFSubmission.Range("Q2").PasteSpecial Paste:=xlPasteValues
-        Application.CutCopyMode = False
     End With
- 
-    ' Find the last used row in column A
-    lastRow = wsOFSubmission.Cells(wsOFSubmission.Rows.Count, "K").End(xlUp).Row
-   
-    'TOPHAT INFO XLOOKUPS
-    Range("E2").Formula = _
-    "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DM:$DM, 0)"
-    Range("F2").Formula = _
-    "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DN:$DN, 0)"
-    Range("G2").Formula = _
-    "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DO:$DO, 0)"
-    Range("H2").Formula = _
-    "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DP:$DP, 0)"
- 
- 
-    ' Check if there are enough rows to fill down
-    If lastRow >= 2 Then
-        ' Define the fill range from Row 2 to the last used row in each column
-        Set colARange = wsOFSubmission.Range("A2:A" & lastRow)
-        Set colBRange = wsOFSubmission.Range("B2:B" & lastRow)
-        Set colNRange = wsOFSubmission.Range("N2:N" & lastRow)
-        Set colRRange = wsOFSubmission.Range("R2:R" & lastRow)
-        Set colVRange = wsOFSubmission.Range("V2:V" & lastRow)
-        Set colERange = wsOFSubmission.Range("E2:E" & lastRow)
-        Set colFRange = wsOFSubmission.Range("F2:F" & lastRow)
-        Set colGRange = wsOFSubmission.Range("G2:G" & lastRow)
-        Set colHRange = wsOFSubmission.Range("H2:H" & lastRow)
-       
-        ' Fill down the value from Row 2
-        wsOFSubmission.Range("A2").AutoFill Destination:=colARange, Type:=xlFillDefault
-        wsOFSubmission.Range("B2").AutoFill Destination:=colBRange, Type:=xlFillDefault
-        wsOFSubmission.Range("N2").AutoFill Destination:=colNRange, Type:=xlFillDefault
-        wsOFSubmission.Range("R2").AutoFill Destination:=colRRange, Type:=xlFillDefault
-        wsOFSubmission.Range("V2").AutoFill Destination:=colVRange, Type:=xlFillDefault
-        wsOFSubmission.Range("E2").AutoFill Destination:=colERange, Type:=xlFillDefault
-        wsOFSubmission.Range("F2").AutoFill Destination:=colFRange, Type:=xlFillDefault
-        wsOFSubmission.Range("G2").AutoFill Destination:=colGRange, Type:=xlFillDefault
-        wsOFSubmission.Range("H2").AutoFill Destination:=colHRange, Type:=xlFillDefault
-    End If
-   
     
-    With wsOFSubmission
-        With Cells
-            .Copy
-        .PasteSpecial Paste:=xlPasteValues
-        End With
+    ' Loop through each row
+    For i = 1 To lastrowinb
+        ' Check if column B contains "XZ4312Y" and column AG is blank
+        If it1.Cells(i, "B").Value = "XZ4312Y" And it1.Cells(i, "AG").Value = "" Then
+            ' Copy BA#s from column D to column J in OFS
+            OFS.Cells(row2, "J").Value = it1.Cells(i, "D").Value
+            ' Copy tickets
+            OFS.Cells(row2, "K").Value = it1.Cells(i, "F").Value
+            ' Copy amt
+            OFS.Cells(row2, "O").Value = it1.Cells(i, "T").Value
+            ' Copy amt
+            OFS.Cells(row2, "P").Value = it1.Cells(i, "T").Value
+            ' Copy amt
+            OFS.Cells(row2, "Q").Value = it1.Cells(i, "T").Value
+            'Write notes in notes column 'NEED TO ADD OF SUB NUMBER ----------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            it1.Cells(i, "AG").Value = "OF Submission " & Format(Date, "mm.dd.yy")
+            row2 = row2 + 1 ' Move to the next row in OFS
+        End If
+    Next i
+ 
+    Dim lastofsrow As Long
+    lastofsrow = OFS.Cells(OFS.Rows.Count, "K").End(xlUp).Row
+    Dim arr() As Variant
+    
+    arr = Array("A", "B", "N", "R", "V")
+    
+    If lastofsrow >= 2 Then
+        For Each Item In arr
+            OFS.Range(Item & "2").AutoFill Destination:=OFS.Range(Item & "2:" & Item & lastofsrow), Type:=xlFillCopy
+        Next Item
+    End If
+    
+    With OFS
+    'TOPHAT INFO XLOOKUPS
+        Range("E2:H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!BH:BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!DM:DP, 0)"
+        Range("E2:H2").AutoFill Destination:=OFS.Range("E" & lastofsrow & ":H" & lastofsrow), Type:=xlFillCopy
+'        Range("E2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DM:$DM, 0)"
+'        Range("F2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DN:$DN, 0)"
+'        Range("G2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DO:$DO, 0)"
+'        Range("H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DP:$DP, 0)"
+    End With
+    
+    
+'Ignore until code is finished
+    With OFS
+        .Cells.Copy
+        .Cells.PastSpecial Paste:=xlPasteValues
         Application.CutCopyMode = False
-        Columns("J").Delete
-        With .Range("E:H")
+        .Columns("J").Delete
+        With Range("E:H")
             .Columns.AutoFit
         End With
     End With
-   
+
     Set OFS = Workbooks.Add
-    wsOFSubmission.Move After:=OFS.Sheets(1)
-    Application.DisplayAlerts = False
+    OFS.Move After:=ActiveWorkbook.Sheets(1)
     OFS.Sheets(1).Delete
-   Application.DisplayAlerts = True
- 
-    ' Open the Save As dialog
+    
+    'MsgBox "Save file in archive"
+    'Open the Save As dialog
     Application.Dialogs(xlDialogSaveAs).Show
+   
+'--------------------------------------------------------------------------------
+'CLEANUP                                                                        |
+'--------------------------------------------------------------------------------
+    Application.DisplayAlerts = True
+    'Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
 End Sub
