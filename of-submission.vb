@@ -1,13 +1,13 @@
 Sub OF_Submission()
     Dim it1 As Worksheet
     Dim OFS As Worksheet
-   
+  
 ' PreWork --------------------------------------------------------------------------
     Application.DisplayAlerts = False
-    Application.ScreenUpdating = False
+    Application.ScreenUpdating = True
     'Application.Calculation = xlCalculationManual
-   
-    Set it1 = ActiveWorkbook.Sheets("ITEMS")
+  
+    Set it1 = ActiveWorkbook.Worksheets("ITEMS")
 '--------------------------------------------------------------------------
 'OF Submission                                                            |
 '--------------------------------------------------------------------------
@@ -18,12 +18,11 @@ Sub OF_Submission()
         Set OFS = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
         OFS.Name = "OF Submission"
     End If
- 
 ' OF report setup
     ' Set column headers in "OF Submission" worksheet
     With OFS
         .Cells.Clear  ' Clear existing content in case of macro rerun
-       
+      
         ' Set column headers
         .Cells(1, 1).Value = "Program Name"
         .Cells(1, 2).Value = "Expense Name"
@@ -52,7 +51,7 @@ Sub OF_Submission()
         .Cells(2, 14).Value = "Installment"
         .Cells(2, 18).Value = "1"
         .Cells(2, 22).Value = "cmsclientid"
-       
+      
         With .Range("A:V")
             ' Change font to Calibri for the entire column range
             .Font.Name = "Calibri"
@@ -60,13 +59,13 @@ Sub OF_Submission()
             .Columns.AutoFilter 'Disable on mac dev environment
             .Columns.AutoFit
         End With
-       
+      
         ' Format columns
         .Range("O:Q").NumberFormat = "$#,##0.00"
         .Range("O:Q").HorizontalAlignment = xlCenter
         .Range("R2:V2").HorizontalAlignment = xlLeft
         .Range("R2:V2").Font.Italic = True
-       
+      
         ' Format the header row (assuming it's row 1)
         With .Range("A1:V1")
             .Interior.Color = RGB(192, 192, 192) ' Gray color
@@ -81,22 +80,20 @@ Sub OF_Submission()
     Dim lastrowinb As Long
     Dim row2 As Long
     Dim i As Long
-   
+  
     ' Find the last row in column B
     lastrowinb = it1.Cells(it1.Rows.Count, "B").End(xlUp).Row
     row2 = 2
-    
+   
     'Leave ITEMS sheet filtered post-run macro
-    With it1
-        On Error Resume Next
-        .ShowAllData 'Testif this works otherwise add ActiveSheet.
-        .AutoFilter Field:=2, Criteria1:="XZ4312Y"
+   
+        
+        
+        it1.ShowAllData 'Testif this works otherwise add ActiveSheet.
+        it1.Range("A1").AutoFilter Field:=2, Criteria1:="XZ4312Y"
         'Check to see if there are visible cells in the filtered range
-        On Error Resume Next
-        .AutoFilter Field:=33, Criteria1:="="
-        On Error Resume Next
-    End With
-    
+        it1.Range("A1").AutoFilter Field:=33, Criteria1:="="
+   
     ' Loop through each row
     For i = 1 To lastrowinb
         ' Check if column B contains "XZ4312Y" and column AG is blank
@@ -112,33 +109,83 @@ Sub OF_Submission()
             ' Copy amt
             OFS.Cells(row2, "Q").Value = it1.Cells(i, "T").Value
             'Write notes in notes column 'NEED TO ADD OF SUB NUMBER ----------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            it1.Cells(i, "AG").Value = "OF Submission " & Format(Date, "mm.dd.yy")
+            'it1.Cells(i, "AG").Value = "OF Submission " & Format(Date, "mm.dd.yy")
             row2 = row2 + 1 ' Move to the next row in OFS
         End If
     Next i
- 
     Dim lastofsrow As Long
     lastofsrow = OFS.Cells(OFS.Rows.Count, "K").End(xlUp).Row
     Dim arr() As Variant
-    
+   
     arr = Array("A", "B", "N", "R", "V")
-    
+   
     If lastofsrow >= 2 Then
         For Each Item In arr
             OFS.Range(Item & "2").AutoFill Destination:=OFS.Range(Item & "2:" & Item & lastofsrow), Type:=xlFillCopy
         Next Item
     End If
-    
-    With OFS
-    'TOPHAT INFO XLOOKUPS
-        Range("E2:H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!BH:BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!DM:DP, 0)"
-        Range("E2:H2").AutoFill Destination:=OFS.Range("E" & lastofsrow & ":H" & lastofsrow), Type:=xlFillCopy
-'        Range("E2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DM:$DM, 0)"
-'        Range("F2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DN:$DN, 0)"
-'        Range("G2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DO:$DO, 0)"
-'        Range("H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$BH:$BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!$DP:$DP, 0)"
-    End With
-    
+   
+    Dim lookupValue As String
+    Dim result As Variant
+    Dim closedFilePath As String
+    Dim closedWorkbook As Workbook
+    Dim sheetName As String
+    Dim lookupRange As Range
+    Dim returnRange As Range
+    'Dim i As Long
+    Dim wb As Workbook
+   
+    Set wb = Workbooks(1)
+    ' Set the lookup value
+    lookupValue = ActiveWorkbook.Sheets("OF Submission").Range("J2").Value ' Adjust to your sheet and cell
+    closedFilePath = "C:\Users\e66cvg\OneDrive - EHI\Desktop\Tophat Acc List.xlsx" ' Adjust the path
+    sheetName = "XZ4312Y(IC)" ' Adjust to your sheet name
+ 
+    ' Open the closed workbook
+    Set closedWorkbook = Workbooks.Open(closedFilePath, ReadOnly:=False)
+ 
+    ' Set the lookup range and return range
+    Set lookupRange = closedWorkbook.Sheets(sheetName).Range("BH:BH")
+    Set returnRange = closedWorkbook.Sheets(sheetName).Range("DM:DP")
+ 
+    ' Loop through each row in column J
+    For i = 2 To lastRow ' Start from row 2, adjust if necessary
+        lookupValue = ActiveWorkbook.Sheets("OF Submission").Cells(i, "J").Value
+ 
+        ' Perform the lookup using Application.WorksheetFunction
+        On Error Resume Next
+        result = Application.WorksheetFunction.XLookup(lookupValue, lookupRange, returnRange, Array("Not Found", "Not Found", "Not Found", "Not Found"))
+        On Error GoTo 0
+ 
+        ' Output the result in columns E, F, G, and H
+        If IsArray(result) Then
+            Dim j As Long
+            For j = LBound(result) To UBound(result)
+                ActiveWorkbook.Sheets("OF Submission").Cells(i, "E").Offset(0, j).Value = result(j)
+            Next j
+        Else
+            ActiveWorkbook.Sheets("OF Submission").Cells(i, "E").Value = result
+        End If
+    Next i
+   
+'    ' Perform the lookup using Application.WorksheetFunction
+'    On Error Resume Next
+'    result = Application.WorksheetFunction.XLookup(lookupValue, lookupRange, returnRange, "Not Found")
+'    On Error GoTo 0
+'
+'    ' Check for errors and output the result
+'    OFS.Range("E2:H2").Value = result ' Adjust to your output cell
+ 
+ 
+    ' Close the closed workbook
+    closedWorkbook.Close SaveChanges:=False
+ 
+'    With OFS
+'    'TOPHAT INFO XLOOKUPS
+'        Range("E2:H2").Formula = "=XLOOKUP(J2, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!BH:BH, '[Tophat Acc List.xlsx]XZ4312Y(IC)'!DM:DP, 0)"
+'        Range("E2:H2").AutoFill Destination:=OFS.Range("H" & lastofsrow), Type:=xlFillCopy
+'    End With
+   
     
 'Ignore until code is finished
     With OFS
@@ -150,15 +197,16 @@ Sub OF_Submission()
             .Columns.AutoFit
         End With
     End With
-
-    Set OFS = Workbooks.Add
+    Dim OFSbook As Workbook
+    Set OFSbook = Workbooks.Add
     OFS.Move After:=ActiveWorkbook.Sheets(1)
-    OFS.Sheets(1).Delete
-    
+    it1.Activate
+    OFSbook.Sheets(1).Delete
+   
     'MsgBox "Save file in archive"
     'Open the Save As dialog
     Application.Dialogs(xlDialogSaveAs).Show
-   
+  
 '--------------------------------------------------------------------------------
 'CLEANUP                                                                        |
 '--------------------------------------------------------------------------------

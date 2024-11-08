@@ -30,3 +30,5 @@ autocommit*
 #ignore xl files
 *.xl*
 
+#ignore accounting files
+accounting-file/
