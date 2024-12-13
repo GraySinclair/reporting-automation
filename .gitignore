@@ -1,0 +1,33 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore temporary files and directories
+*.temp
+*.tmp
+*~
+
+# Ignore virtual environments
+venv/
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+
+# Ignore log files
+*.log
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore coverage reports
+coverage/
+
+auto*
+
+#ignore xl files
+*.xl*
+
+#ignore accounting files
+accounting-file/
