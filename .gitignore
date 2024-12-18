@@ -34,3 +34,6 @@ accounting-file/
 
 #ignore req file
 requirements.txt
+
+# Ignore test csv(productivity booster project)
+test*
