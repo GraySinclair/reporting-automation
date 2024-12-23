@@ -12,5 +12,13 @@ Sub CorpBillCitationAdminFees()
     Application.Calculation = xlCalculationManual ' Turn off automatic calculation
     Application.EnableEvents = False ' Disable events temporarily
  
-
+    Set tssfee = ActiveWorkbook.Sheets("TSS Fee")
+    Set tsstotal = ActiveWorkbook.Sheets("TSS Fee_Total")
+    Set access = ActiveWorkbook.Sheets("Master Access File")
+    Set historic = ActiveWorkbook.Sheets("Historic File")
+   
+ 
+    RemoveBlankColumns tssfee, 23
+    RemoveBlankColumns tsstotal, 19
+   
 End Sub
