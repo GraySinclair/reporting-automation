@@ -37,4 +37,20 @@ Sub CorpBillCitationAdminFees()
             tsstotal.Columns(col).Delete
         End If
     Next col
+
+   
+'    ' deleting blank columns in access
+'    For col = 20 To 1 Step -1
+'        If WorksheetFunction.CountA(access.Columns(col)) = 0 Then
+'            access.Columns(col).Delete
+'        End If
+'    Next col
+'    ' deleting blank columns in historic
+'    For col = 26 To 1 Step -1
+'        If WorksheetFunction.CountA(historic.Columns(col)) = 0 Then
+'            historic.Columns(col).Delete
+'        End If
+'    Next col
+'
+ 
 End Sub
