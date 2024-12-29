@@ -64,4 +64,21 @@ Sub CorpBillCitationAdminFees()
     lastrowinhistoric = historic.Cells(historic.Rows.Count, "A").End(xlUp).Row
     lastrowinaccess = access.Cells(access.Rows.Count, "A").End(xlUp).Row
    
+    ' Delete rows after the last row with data
+    If lastrowintssfee < tssfee.Rows.Count Then
+        tssfee.Rows(lastrowintssfee + 1 & ":" & tssfee.Rows.Count).Delete
+    End If
+   
+    If lastrowintsstotal < tsstotal.Rows.Count Then
+        tsstotal.Rows(lastrowintsstotal + 1 & ":" & tsstotal.Rows.Count).Delete
+    End If
+   
+    If lastrowinhistoric < historic.Rows.Count Then
+        historic.Rows(lastrowinhistoric + 1 & ":" & historic.Rows.Count).Delete
+    End If
+   
+    If lastrowinaccess < access.Rows.Count Then
+        access.Rows(lastrowinaccess + 1 & ":" & access.Rows.Count).Delete
+    End If
+   
 End Sub
