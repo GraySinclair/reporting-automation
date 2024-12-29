@@ -53,4 +53,15 @@ Sub CorpBillCitationAdminFees()
 '    Next col
 '
  
+    'for deleting extra space------------------------------------------------------
+    Dim lastrowintssfee As Long
+    Dim lastrowintsstotal As Long
+    Dim lastrowinhistoric As Long
+    Dim lastrowinaccess As Long
+   
+    lastrowintssfee = tssfee.Cells(tssfee.Rows.Count, "A").End(xlUp).Row
+    lastrowintsstotal = tsstotal.Cells(tsstotal.Rows.Count, "A").End(xlUp).Row
+    lastrowinhistoric = historic.Cells(historic.Rows.Count, "A").End(xlUp).Row
+    lastrowinaccess = access.Cells(access.Rows.Count, "A").End(xlUp).Row
+   
 End Sub
