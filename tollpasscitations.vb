@@ -96,4 +96,40 @@ Sub CorpBillCitationAdminFees()
         Next col
     End With
    
+
+    With tsstotal
+        For col = 1 To 23
+            ' Check if the header in row 1 matches any of the specified values
+            Set header = tsstotal.Cells(1, col)
+       
+            If header.Value = "BillingRefNum" Or header.Value = "Brand" Or header.Value = "CheckOutLocation" Or header.Value = "Lic State" Or header.Value = "Usage Days" Or header.Value = "Invoice Ending" Then
+                tsstotal.Columns(col).Delete
+                col = col - 1 ' Adjust column index after deletion
+            End If
+        Next col
+    End With
+ 
+    Dim tblRange As Range
+    Dim tbl As ListObject
+    Dim lastcolintssfee As Long
+    Dim lastcolintsstotal As Long
+    Dim lastcolinaccess As Long
+    Dim lastcolinhistoric As Long
+   
+    Dim tolldatetime As Integer
+    Dim formula As String
+    Dim datarange As Range
+   
+    Dim ranumcol As ListColumn
+    Dim firstcol As ListColumn
+    'for adding columns
+    Dim corpIDColumn As ListColumn
+    Dim corpIDIndex As Integer
+   
+    ' Find the last used columns
+    lastcolintssfee = tssfee.Cells(1, tssfee.Columns.Count).End(xlToLeft).Column ' Last column in row 1
+    lastcolintsstotal = tsstotal.Cells(1, tsstotal.Columns.Count).End(xlToLeft).Column
+    lastcolinaccess = access.Cells(1, access.Columns.Count).End(xlToLeft).Column
+    lastcolinhistoric = historic.Cells(1, historic.Columns.Count).End(xlToLeft).Column
+   
 End Sub
