@@ -81,4 +81,19 @@ Sub CorpBillCitationAdminFees()
         access.Rows(lastrowinaccess + 1 & ":" & access.Rows.Count).Delete
     End If
    
+
+    Dim header As Range
+    ' Loop through columns A to W (1 to 23)
+    With tssfee
+        For col = 1 To 23
+            ' Check if the header in row 1 matches any of the specified values
+            Set header = tssfee.Cells(1, col)
+       
+            If header.Value = "BillingRefNum" Or header.Value = "Brand" Or header.Value = "CheckOutLocation" Or header.Value = "Lic State" Or header.Value = "Invoice Ending" Then
+                tssfee.Columns(col).Delete
+                col = col - 1 ' Adjust column index after deletion
+            End If
+        Next col
+    End With
+   
 End Sub
