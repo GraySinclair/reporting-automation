@@ -132,4 +132,15 @@ Sub CorpBillCitationAdminFees()
     lastcolinaccess = access.Cells(1, access.Columns.Count).End(xlToLeft).Column
     lastcolinhistoric = historic.Cells(1, historic.Columns.Count).End(xlToLeft).Column
    
+    'historic table-----------------------------------------------
+    ' Define the dynamic range (adjust based on lastRow and lastCol)
+    Set tblRange = historic.Range(historic.Cells(1, 1), historic.Cells(lastrowinhistoric, lastcolinhistoric))
+   
+    ' Add a table to the range
+    Set tbl = historic.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
+                                  XlListObjectHasHeaders:=xlYes)
+   
+    ' Optional: Name the table
+    tbl.Name = "historictable"
+ 
 End Sub
