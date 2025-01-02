@@ -143,4 +143,17 @@ Sub CorpBillCitationAdminFees()
     ' Optional: Name the table
     tbl.Name = "historictable"
  
+    ' Optional: Format the table (apply a style)
+    tbl.TableStyle = "" ' You can choose a different table style here
+ 
+    'access table-----------------------------------------------
+    ' Define the dynamic range (adjust based on lastRow and lastCol)
+    Set tblRange = access.Range(access.Cells(1, 1), access.Cells(lastrowinaccess, lastcolinaccess))
+   
+    ' Add a table to the range
+    Set tbl = access.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
+                                  XlListObjectHasHeaders:=xlYes)
+   
+    ' Optional: Name the table
+    tbl.Name = "accesstable"
 End Sub
