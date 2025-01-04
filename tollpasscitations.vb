@@ -170,4 +170,17 @@ Sub CorpBillCitationAdminFees()
    
     ' Optional: Name the table
     tbl.Name = "tssfeetable"
+
+    ' Optional: Format the table (apply a style)
+    tbl.TableStyle = "" ' You can choose a different table style here
+    'tbl.Range.ClearFormats
+   
+    ' Find the CorpID column
+    On Error Resume Next
+    Set corpIDColumn = tbl.ListColumns("CorpID")
+    On Error GoTo 0
+   
+    If Not corpIDColumn Is Nothing Then
+        ' Get the index of the CorpID column
+        corpIDIndex = corpIDColumn.Index
 End Sub
