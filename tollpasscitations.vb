@@ -156,4 +156,18 @@ Sub CorpBillCitationAdminFees()
    
     ' Optional: Name the table
     tbl.Name = "accesstable"
+     
+    ' Optional: Format the table (apply a style)
+    tbl.TableStyle = "" ' You can choose a different table style here
+   
+    'tssfee table-----------------------------------------------
+    ' Define the dynamic range (adjust based on lastRow and lastCol)
+    Set tblRange = tssfee.Range(tssfee.Cells(1, 1), tssfee.Cells(lastrowintssfee, lastcolintssfee))
+   
+    ' Add a table to the range
+    Set tbl = tssfee.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
+                                  XlListObjectHasHeaders:=xlYes)
+   
+    ' Optional: Name the table
+    tbl.Name = "tssfeetable"
 End Sub
