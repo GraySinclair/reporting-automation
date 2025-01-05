@@ -183,4 +183,13 @@ Sub CorpBillCitationAdminFees()
     If Not corpIDColumn Is Nothing Then
         ' Get the index of the CorpID column
         corpIDIndex = corpIDColumn.Index
+       
+        ' Insert new columns after the CorpID column
+        tbl.ListColumns.Add (corpIDIndex + 1) ' Insert first new column after CorpID
+        tbl.ListColumns.Add (corpIDIndex + 2) ' Insert second new column after CorpID
+        tbl.ListColumns.Add (corpIDIndex + 13) ' Insert third new column after CorpID
+        ' Insert a new column after the 18th column (or where you want it)
+        tolldatetime = corpIDIndex + 18 ' 18 columns after CorpID
+        ' Insert a new column
+        tbl.ListColumns.Add (tolldatetime)
 End Sub
