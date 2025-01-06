@@ -192,4 +192,18 @@ Sub CorpBillCitationAdminFees()
         tolldatetime = corpIDIndex + 18 ' 18 columns after CorpID
         ' Insert a new column
         tbl.ListColumns.Add (tolldatetime)
+       
+        ' Set the headers for the new columns
+        tbl.HeaderRowRange.Cells(1, corpIDIndex + 1).Value = "BA"
+        tbl.HeaderRowRange.Cells(1, corpIDIndex + 2).Value = "Frequency"
+        tbl.HeaderRowRange.Cells(1, corpIDIndex + 13).Value = "Unit #"
+        ' Set the header for the new column
+        tbl.HeaderRowRange.Cells(1, tolldatetime).Value = "Toll Date/Time"
+       
+ 
+ 
+        formula = "=TEXT([@[Toll Date]],""mm/dd/yyyy"")&TEXT([@[ISSUE TIME]],"" hh:mm:ss"")"
+        Set datarange = tbl.ListColumns(tolldatetime).DataBodyRange
+        datarange.formula = formula
+       
 End Sub
