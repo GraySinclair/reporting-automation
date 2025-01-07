@@ -201,9 +201,22 @@ Sub CorpBillCitationAdminFees()
         tbl.HeaderRowRange.Cells(1, tolldatetime).Value = "Toll Date/Time"
        
  
- 
         formula = "=TEXT([@[Toll Date]],""mm/dd/yyyy"")&TEXT([@[ISSUE TIME]],"" hh:mm:ss"")"
         Set datarange = tbl.ListColumns(tolldatetime).DataBodyRange
         datarange.formula = formula
+       
+
+        ' Copy the calculated values
+        datarange.Copy
+ 
+        ' Paste as values (overwriting the formulas with their results)
+        datarange.PasteSpecial Paste:=xlPasteValues
+        ' Clear the clipboard to avoid the "marching ants" effect
+        Application.CutCopyMode = False
+       
+        If tolldatetime > 2 Then
+            tbl.ListColumns(tolldatetime - 1).Delete
+            tbl.ListColumns(tolldatetime - 2).Delete
+        End If
        
 End Sub
