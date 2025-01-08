@@ -219,4 +219,20 @@ Sub CorpBillCitationAdminFees()
             tbl.ListColumns(tolldatetime - 2).Delete
         End If
        
+        ' Find the column "RA#" in the table
+        On Error Resume Next
+        Set ranumcol = tbl.ListColumns("RA#")
+        On Error GoTo 0
+       
+        ' Check if the "RA#" column exists
+        If Not ranumcol Is Nothing Then
+            ' Get the first column in the table
+            Set firstcol = tbl.ListColumns(1)
+       
+            ' Move the "RA#" column to be the first column
+            ranumcol.Range.Cut
+            firstcol.Range.Insert Shift:=xlToRight
+        End If
+    End If
+ 
 End Sub
