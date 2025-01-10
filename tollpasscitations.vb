@@ -235,4 +235,17 @@ Sub CorpBillCitationAdminFees()
         End If
     End If
  
+'tsstotal table-----------------------------------------------
+    ' Define the dynamic range (adjust based on lastRow and lastCol)
+    Set tblRange = tsstotal.Range(tsstotal.Cells(1, 1), tsstotal.Cells(lastrowintsstotal, lastcolintsstotal))
+   
+    ' Add a table to the range
+    Set tbl = tsstotal.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
+                                  XlListObjectHasHeaders:=xlYes)
+   
+    ' Optional: Name the table
+    tbl.Name = "tsstotaltable"
+   
+    ' Optional: Format the table (apply a style)
+    tbl.TableStyle = "" ' You can choose a different table style here
 End Sub
