@@ -262,4 +262,16 @@ Sub CorpBillCitationAdminFees()
         ' Insert 3 new columns after the CorpID column
         tbl.ListColumns.Add (corpIDIndex + 1) ' Insert first new column after CorpID
         tbl.ListColumns.Add (corpIDIndex + 2) ' Insert second new column after CorpID
+
+ 
+        ' Set the headers for the new columns
+        tbl.HeaderRowRange.Cells(1, corpIDIndex + 1).Value = "BA"
+        tbl.HeaderRowRange.Cells(1, corpIDIndex + 2).Value = "Frequency"
+        tbl.ListColumns(corpIDIndex + 11).Delete
+       
+        ' Find the column "RA#" in the table
+        On Error Resume Next
+        Set ranumcol = tbl.ListColumns("RA#")
+        On Error GoTo 0
+       
 End Sub
