@@ -248,4 +248,18 @@ Sub CorpBillCitationAdminFees()
    
     ' Optional: Format the table (apply a style)
     tbl.TableStyle = "" ' You can choose a different table style here
+
+   
+    ' Find the CorpID column
+    On Error Resume Next
+    Set corpIDColumn = tbl.ListColumns("CorpID")
+    On Error GoTo 0
+   
+    If Not corpIDColumn Is Nothing Then
+        ' Get the index of the CorpID column
+        corpIDIndex = corpIDColumn.Index
+       
+        ' Insert 3 new columns after the CorpID column
+        tbl.ListColumns.Add (corpIDIndex + 1) ' Insert first new column after CorpID
+        tbl.ListColumns.Add (corpIDIndex + 2) ' Insert second new column after CorpID
 End Sub
