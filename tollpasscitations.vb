@@ -285,4 +285,17 @@ Sub CorpBillCitationAdminFees()
         End If
     End If
    
+    'TSSFEE XLOOKUPS------------------------------------------------
+    'question: does the historic file need to be filtered for the correct info?
+    Set tbl = tssfee.ListObjects("tssfeetable")
+   
+    'XLOOKUP FOR TSSFEE - BA col from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[BA'#],0)"
+    tbl.ListColumns("BA").DataBodyRange.formula = formula
+    tbl.ListColumns("BA").DataBodyRange.NumberFormat = "@"
+ 
+    'XLOOKUP FOR TSSFEE - Frequency col from access
+    formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
+    tbl.ListColumns("Frequency").DataBodyRange.formula = formula
+    tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
 End Sub
