@@ -298,4 +298,20 @@ Sub CorpBillCitationAdminFees()
     formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
     tbl.ListColumns("Frequency").DataBodyRange.formula = formula
     tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
+
+   
+    'XLOOKUP FOR TSSFEE - City from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental City],0)"
+    tbl.ListColumns("City").DataBodyRange.formula = formula
+    tbl.ListColumns("City").DataBodyRange.NumberFormat = "@"
+   
+    'XLOOKUP FOR TSSFEE - State from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental State],0)"
+    tbl.ListColumns("State").DataBodyRange.formula = formula
+    tbl.ListColumns("State").DataBodyRange.NumberFormat = "@"
+   
+    'XLOOKUP FOR TSSFEE - PO from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Claim '# Field],0)"
+    tbl.ListColumns("PO").DataBodyRange.formula = formula
+    tbl.ListColumns("PO").DataBodyRange.NumberFormat = "@"
 End Sub
