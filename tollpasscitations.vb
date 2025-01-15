@@ -314,4 +314,21 @@ Sub CorpBillCitationAdminFees()
     formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Claim '# Field],0)"
     tbl.ListColumns("PO").DataBodyRange.formula = formula
     tbl.ListColumns("PO").DataBodyRange.NumberFormat = "@"
+       
+    'XLOOKUP FOR TSSFEE - PO1 from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 1],0)"
+    tbl.ListColumns("PO1").DataBodyRange.formula = formula
+    tbl.ListColumns("PO1").DataBodyRange.NumberFormat = "@"
+   
+    'XLOOKUP FOR TSSFEE - PO2 from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 2],0)"
+    tbl.ListColumns("PO2").DataBodyRange.formula = formula
+    tbl.ListColumns("PO2").DataBodyRange.NumberFormat = "@"
+   
+    'XLOOKUP FOR TSSFEE - Unit# from Historic
+    'NEEDS CONVERT TO TEXT & Trim BEFORE COPY/PASTE values
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Veh Unit Nbr],0)"
+    tbl.ListColumns("Unit #").DataBodyRange.FormulaLocal = formula
+    tbl.ListColumns("Unit #").DataBodyRange.NumberFormat = "@"
+   
 End Sub
