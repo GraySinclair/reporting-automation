@@ -331,4 +331,17 @@ Sub CorpBillCitationAdminFees()
     tbl.ListColumns("Unit #").DataBodyRange.FormulaLocal = formula
     tbl.ListColumns("Unit #").DataBodyRange.NumberFormat = "@"
    
+    'functional end----------------------------------------------
+   
+    Set tbl = tsstotal.ListObjects("tsstotaltable")
+   
+    'XLOOKUP FOR TSSTOTAL - BA col from Historic
+    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[BA'#],0)"
+    tbl.ListColumns("BA").DataBodyRange.formula = formula
+    tbl.ListColumns("BA").DataBodyRange.NumberFormat = "@"
+ 
+    'XLOOKUP FOR TSSTOTAL - Frequency col from access
+    formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
+    tbl.ListColumns("Frequency").DataBodyRange.formula = formula
+    tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
 End Sub
