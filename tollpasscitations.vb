@@ -344,4 +344,15 @@ Sub CorpBillCitationAdminFees()
     formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
     tbl.ListColumns("Frequency").DataBodyRange.formula = formula
     tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
+       
+    ' Re-enable automatic calculation after macro is done
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+    ' Force a full calculation to update XLOOKUP results
+    Application.Calculate
+   
+    ' Copy the entire table range (including headers)
+    tbl.Range.Copyd
+    ' Paste values only, effectively replacing formulas with their values
+    tbl.Range.PasteSpecial Paste:=xlPasteValues
 End Sub
