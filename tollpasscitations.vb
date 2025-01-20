@@ -355,4 +355,34 @@ Sub CorpBillCitationAdminFees()
     tbl.Range.Copyd
     ' Paste values only, effectively replacing formulas with their values
     tbl.Range.PasteSpecial Paste:=xlPasteValues
+    ' Clear the clipboard (optional)
+    Application.CutCopyMode = False
+    ' AutoFit all columns in the table
+    tbl.Range.Columns.AutoFit
+   
+    Set tbl = tssfee.ListObjects("tssfeetable")
+    ' Copy the entire table range (including headers)
+    tbl.Range.Copy
+    ' Paste values only, effectively replacing formulas with their values
+    tbl.Range.PasteSpecial Paste:=xlPasteValues
+    ' Clear the clipboard (optional)
+    Application.CutCopyMode = False
+    
+    ' AutoFit all columns in the table
+    tbl.Range.Columns.AutoFit
+    tbl.DataBodyRange.NumberFormat = "@"
+    ' Cleanup ----------------------------------------
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+    ' remove pre-indexing when complete
+    '  ----------------------------------------
+End Sub
+' Remove blank columns from a worksheet
+Sub RemoveBlankColumns(ws As Worksheet, startCol As Long)
+    Dim col As Long
+    For col = startCol To 1 Step -1
+        If Application.WorksheetFunction.CountA(ws.Columns(col)) = 0 Then
+            ws.Columns(col).Delete
+        End If
+    Next col
 End Sub
