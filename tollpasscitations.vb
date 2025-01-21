@@ -386,3 +386,23 @@ Sub RemoveBlankColumns(ws As Worksheet, startCol As Long)
         End If
     Next col
 End Sub
+' Delete rows after the last used row
+Sub DeleteExtraRows(ws As Worksheet)
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    If lastRow < ws.Rows.Count Then
+        ws.Rows(lastRow + 1 & ":" & ws.Rows.Count).Delete
+    End If
+End Sub
+' Remove columns based on header values
+Sub RemoveColumnsByHeaders(ws As Worksheet, headers As Variant)
+    Dim col As Long
+    Dim header As Range
+    For col = 1 To ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+        Set header = ws.Cells(1, col)
+        If Not IsError(Application.Match(header.Value, headers, 0)) Then
+            ws.Columns(col).Delete
+            col = col - 1 ' Adjust column index after deletion
+        End If
+    Next col
+End Sub
