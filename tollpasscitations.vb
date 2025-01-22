@@ -5,7 +5,6 @@ Sub CorpBillCitationAdminFees()
     Dim access As Worksheet
     Dim historic As Worksheet
    
-    
     ' PreWork ----------------------------------------
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
@@ -17,256 +16,55 @@ Sub CorpBillCitationAdminFees()
     Set access = ActiveWorkbook.Sheets("Master Access File")
     Set historic = ActiveWorkbook.Sheets("Historic File")
    
- 
+    ' Remove blank columns from tssfee and tsstotal
     RemoveBlankColumns tssfee, 23
     RemoveBlankColumns tsstotal, 19
    
-    ' deleting blank columns if they exist in tssfees and tsstotal---------------------------------
-    'Dim col As Long
-    ' Loop through columns from X to A (backward to avoid shifting)
-    ' deleting blank columns in tssfee
-'    For col = 23 To 1 Step -1
-'        If WorksheetFunction.CountA(tssfee.Columns(col)) = 0 Then
-'            tssfee.Columns(col).Delete
-'        End If
-'    Next col
+    ' Delete extra rows after last used row
+    DeleteExtraRows tssfee
+    DeleteExtraRows tsstotal
+    DeleteExtraRows access
+    DeleteExtraRows historic
    
-    ' deleting blank columns in tsstotal
-    For col = 19 To 1 Step -1
-        If WorksheetFunction.CountA(tsstotal.Columns(col)) = 0 Then
-            tsstotal.Columns(col).Delete
-        End If
-    Next col
-
+    ' Create tables dynamically for historic, access, tssfee, tsstotal
+    CreateTable historic, "historictable"
+    CreateTable access, "accesstable"
+    CreateTable tssfee, "tssfeetable"
+    CreateTable tsstotal, "tsstotaltable"
    
-'    ' deleting blank columns in access
-'    For col = 20 To 1 Step -1
-'        If WorksheetFunction.CountA(access.Columns(col)) = 0 Then
-'            access.Columns(col).Delete
-'        End If
-'    Next col
-'    ' deleting blank columns in historic
-'    For col = 26 To 1 Step -1
-'        If WorksheetFunction.CountA(historic.Columns(col)) = 0 Then
-'            historic.Columns(col).Delete
-'        End If
-'    Next col
-'
+    ' Add Columns
+    AddColumnsToTable tssfee, 4, Array("BA", "Frequency", "Unit", "Datetime")
+    AddColumnsToTable tsstotal, 2, Array("BA", "Frequency")
+   
+    ' Remove specific columns from tssfee and tsstotal based on headers
+    RemoveColumnsByHeaders tssfee, Array("BillingRefNum", "Brand", "CheckOutLocation", "Lic State", "Invoice Ending")
+    RemoveColumnsByHeaders tsstotal, Array("BillingRefNum", "Brand", "CheckOutLocation", "Lic State", "Usage Days", "Invoice Ending")
+   
+    ' Set formula in (sheet, column, formula)
+    SetFormula tssfee, "City", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental City],0)"
+    SetFormula tssfee, "State", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental State],0)"
+    SetFormula tssfee, "PO", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Claim '# Field],0)"
+    SetFormula tssfee, "PO1", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 1],0)"
+    SetFormula tssfee, "PO2", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 2],0)"
+    SetFormula tssfee, "BA", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[BA'#],0)"
+    SetFormula tssfee, "Frequency", "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
+    SetFormula tssfee, "Unit", "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Veh Unit Nbr],0)"
+    SetFormula tssfee, "Datetime", "=TEXT([@[Toll Date]],""mm/dd/yyyy"")&TEXT([@[ISSUE TIME]],"" hh:mm:ss"")"
+   
+    'START -----------------------------------
  
-    'for deleting extra space------------------------------------------------------
-    Dim lastrowintssfee As Long
-    Dim lastrowintsstotal As Long
-    Dim lastrowinhistoric As Long
-    Dim lastrowinaccess As Long
-   
-    lastrowintssfee = tssfee.Cells(tssfee.Rows.Count, "A").End(xlUp).Row
-    lastrowintsstotal = tsstotal.Cells(tsstotal.Rows.Count, "A").End(xlUp).Row
-    lastrowinhistoric = historic.Cells(historic.Rows.Count, "A").End(xlUp).Row
-    lastrowinaccess = access.Cells(access.Rows.Count, "A").End(xlUp).Row
-   
-    ' Delete rows after the last row with data
-    If lastrowintssfee < tssfee.Rows.Count Then
-        tssfee.Rows(lastrowintssfee + 1 & ":" & tssfee.Rows.Count).Delete
-    End If
-   
-    If lastrowintsstotal < tsstotal.Rows.Count Then
-        tsstotal.Rows(lastrowintsstotal + 1 & ":" & tsstotal.Rows.Count).Delete
-    End If
-   
-    If lastrowinhistoric < historic.Rows.Count Then
-        historic.Rows(lastrowinhistoric + 1 & ":" & historic.Rows.Count).Delete
-    End If
-   
-    If lastrowinaccess < access.Rows.Count Then
-        access.Rows(lastrowinaccess + 1 & ":" & access.Rows.Count).Delete
-    End If
-   
-
-    Dim header As Range
-    ' Loop through columns A to W (1 to 23)
-    With tssfee
-        For col = 1 To 23
-            ' Check if the header in row 1 matches any of the specified values
-            Set header = tssfee.Cells(1, col)
-       
-            If header.Value = "BillingRefNum" Or header.Value = "Brand" Or header.Value = "CheckOutLocation" Or header.Value = "Lic State" Or header.Value = "Invoice Ending" Then
-                tssfee.Columns(col).Delete
-                col = col - 1 ' Adjust column index after deletion
-            End If
-        Next col
-    End With
-   
-
-    With tsstotal
-        For col = 1 To 23
-            ' Check if the header in row 1 matches any of the specified values
-            Set header = tsstotal.Cells(1, col)
-       
-            If header.Value = "BillingRefNum" Or header.Value = "Brand" Or header.Value = "CheckOutLocation" Or header.Value = "Lic State" Or header.Value = "Usage Days" Or header.Value = "Invoice Ending" Then
-                tsstotal.Columns(col).Delete
-                col = col - 1 ' Adjust column index after deletion
-            End If
-        Next col
-    End With
  
-    Dim tblRange As Range
-    Dim tbl As ListObject
-    Dim lastcolintssfee As Long
-    Dim lastcolintsstotal As Long
-    Dim lastcolinaccess As Long
-    Dim lastcolinhistoric As Long
-   
-    Dim tolldatetime As Integer
-    Dim formula As String
-    Dim datarange As Range
-   
-    Dim ranumcol As ListColumn
-    Dim firstcol As ListColumn
-    'for adding columns
-    Dim corpIDColumn As ListColumn
-    Dim corpIDIndex As Integer
-   
-    ' Find the last used columns
-    lastcolintssfee = tssfee.Cells(1, tssfee.Columns.Count).End(xlToLeft).Column ' Last column in row 1
-    lastcolintsstotal = tsstotal.Cells(1, tsstotal.Columns.Count).End(xlToLeft).Column
-    lastcolinaccess = access.Cells(1, access.Columns.Count).End(xlToLeft).Column
-    lastcolinhistoric = historic.Cells(1, historic.Columns.Count).End(xlToLeft).Column
-   
-    'historic table-----------------------------------------------
-    ' Define the dynamic range (adjust based on lastRow and lastCol)
-    Set tblRange = historic.Range(historic.Cells(1, 1), historic.Cells(lastrowinhistoric, lastcolinhistoric))
-   
-    ' Add a table to the range
-    Set tbl = historic.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
-                                  XlListObjectHasHeaders:=xlYes)
-   
-    ' Optional: Name the table
-    tbl.Name = "historictable"
- 
-    ' Optional: Format the table (apply a style)
-    tbl.TableStyle = "" ' You can choose a different table style here
- 
-    'access table-----------------------------------------------
-    ' Define the dynamic range (adjust based on lastRow and lastCol)
-    Set tblRange = access.Range(access.Cells(1, 1), access.Cells(lastrowinaccess, lastcolinaccess))
-   
-    ' Add a table to the range
-    Set tbl = access.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
-                                  XlListObjectHasHeaders:=xlYes)
-   
-    ' Optional: Name the table
-    tbl.Name = "accesstable"
-     
-    ' Optional: Format the table (apply a style)
-    tbl.TableStyle = "" ' You can choose a different table style here
-   
-    'tssfee table-----------------------------------------------
-    ' Define the dynamic range (adjust based on lastRow and lastCol)
-    Set tblRange = tssfee.Range(tssfee.Cells(1, 1), tssfee.Cells(lastrowintssfee, lastcolintssfee))
-   
-    ' Add a table to the range
-    Set tbl = tssfee.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
-                                  XlListObjectHasHeaders:=xlYes)
-   
-    ' Optional: Name the table
-    tbl.Name = "tssfeetable"
-
-    ' Optional: Format the table (apply a style)
-    tbl.TableStyle = "" ' You can choose a different table style here
-    'tbl.Range.ClearFormats
-   
-    ' Find the CorpID column
-    On Error Resume Next
-    Set corpIDColumn = tbl.ListColumns("CorpID")
-    On Error GoTo 0
-   
-    If Not corpIDColumn Is Nothing Then
-        ' Get the index of the CorpID column
-        corpIDIndex = corpIDColumn.Index
-       
-        ' Insert new columns after the CorpID column
-        tbl.ListColumns.Add (corpIDIndex + 1) ' Insert first new column after CorpID
-        tbl.ListColumns.Add (corpIDIndex + 2) ' Insert second new column after CorpID
-        tbl.ListColumns.Add (corpIDIndex + 13) ' Insert third new column after CorpID
-        ' Insert a new column after the 18th column (or where you want it)
-        tolldatetime = corpIDIndex + 18 ' 18 columns after CorpID
-        ' Insert a new column
-        tbl.ListColumns.Add (tolldatetime)
-       
-        ' Set the headers for the new columns
-        tbl.HeaderRowRange.Cells(1, corpIDIndex + 1).Value = "BA"
-        tbl.HeaderRowRange.Cells(1, corpIDIndex + 2).Value = "Frequency"
-        tbl.HeaderRowRange.Cells(1, corpIDIndex + 13).Value = "Unit #"
-        ' Set the header for the new column
-        tbl.HeaderRowRange.Cells(1, tolldatetime).Value = "Toll Date/Time"
-       
- 
-        formula = "=TEXT([@[Toll Date]],""mm/dd/yyyy"")&TEXT([@[ISSUE TIME]],"" hh:mm:ss"")"
-        Set datarange = tbl.ListColumns(tolldatetime).DataBodyRange
-        datarange.formula = formula
-       
-
-        ' Copy the calculated values
-        datarange.Copy
- 
-        ' Paste as values (overwriting the formulas with their results)
-        datarange.PasteSpecial Paste:=xlPasteValues
-        ' Clear the clipboard to avoid the "marching ants" effect
-        Application.CutCopyMode = False
-       
-        If tolldatetime > 2 Then
-            tbl.ListColumns(tolldatetime - 1).Delete
-            tbl.ListColumns(tolldatetime - 2).Delete
-        End If
-       
-        ' Find the column "RA#" in the table
-        On Error Resume Next
-        Set ranumcol = tbl.ListColumns("RA#")
-        On Error GoTo 0
-       
-        ' Check if the "RA#" column exists
-        If Not ranumcol Is Nothing Then
-            ' Get the first column in the table
-            Set firstcol = tbl.ListColumns(1)
-       
             ' Move the "RA#" column to be the first column
             ranumcol.Range.Cut
             firstcol.Range.Insert Shift:=xlToRight
-        End If
-    End If
+ 
  
 'tsstotal table-----------------------------------------------
-    ' Define the dynamic range (adjust based on lastRow and lastCol)
-    Set tblRange = tsstotal.Range(tsstotal.Cells(1, 1), tsstotal.Cells(lastrowintsstotal, lastcolintsstotal))
-   
-    ' Add a table to the range
-    Set tbl = tsstotal.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, _
-                                  XlListObjectHasHeaders:=xlYes)
-   
-    ' Optional: Name the table
-    tbl.Name = "tsstotaltable"
-   
-    ' Optional: Format the table (apply a style)
-    tbl.TableStyle = "" ' You can choose a different table style here
-
-   
-    ' Find the CorpID column
-    On Error Resume Next
-    Set corpIDColumn = tbl.ListColumns("CorpID")
-    On Error GoTo 0
-   
+ 
     If Not corpIDColumn Is Nothing Then
         ' Get the index of the CorpID column
         corpIDIndex = corpIDColumn.Index
-       
-        ' Insert 3 new columns after the CorpID column
-        tbl.ListColumns.Add (corpIDIndex + 1) ' Insert first new column after CorpID
-        tbl.ListColumns.Add (corpIDIndex + 2) ' Insert second new column after CorpID
-
  
-        ' Set the headers for the new columns
-        tbl.HeaderRowRange.Cells(1, corpIDIndex + 1).Value = "BA"
-        tbl.HeaderRowRange.Cells(1, corpIDIndex + 2).Value = "Frequency"
         tbl.ListColumns(corpIDIndex + 11).Delete
        
         ' Find the column "RA#" in the table
@@ -287,43 +85,7 @@ Sub CorpBillCitationAdminFees()
    
     'TSSFEE XLOOKUPS------------------------------------------------
     'question: does the historic file need to be filtered for the correct info?
-    Set tbl = tssfee.ListObjects("tssfeetable")
-   
-    'XLOOKUP FOR TSSFEE - BA col from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[BA'#],0)"
-    tbl.ListColumns("BA").DataBodyRange.formula = formula
-    tbl.ListColumns("BA").DataBodyRange.NumberFormat = "@"
  
-    'XLOOKUP FOR TSSFEE - Frequency col from access
-    formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
-    tbl.ListColumns("Frequency").DataBodyRange.formula = formula
-    tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
-
-   
-    'XLOOKUP FOR TSSFEE - City from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental City],0)"
-    tbl.ListColumns("City").DataBodyRange.formula = formula
-    tbl.ListColumns("City").DataBodyRange.NumberFormat = "@"
-   
-    'XLOOKUP FOR TSSFEE - State from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Rental State],0)"
-    tbl.ListColumns("State").DataBodyRange.formula = formula
-    tbl.ListColumns("State").DataBodyRange.NumberFormat = "@"
-   
-    'XLOOKUP FOR TSSFEE - PO from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[Claim '# Field],0)"
-    tbl.ListColumns("PO").DataBodyRange.formula = formula
-    tbl.ListColumns("PO").DataBodyRange.NumberFormat = "@"
-       
-    'XLOOKUP FOR TSSFEE - PO1 from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 1],0)"
-    tbl.ListColumns("PO1").DataBodyRange.formula = formula
-    tbl.ListColumns("PO1").DataBodyRange.NumberFormat = "@"
-   
-    'XLOOKUP FOR TSSFEE - PO2 from Historic
-    formula = "=XLOOKUP([@[RA'#]],historictable[Ticket '#],historictable[PO 2],0)"
-    tbl.ListColumns("PO2").DataBodyRange.formula = formula
-    tbl.ListColumns("PO2").DataBodyRange.NumberFormat = "@"
    
     'XLOOKUP FOR TSSFEE - Unit# from Historic
     'NEEDS CONVERT TO TEXT & Trim BEFORE COPY/PASTE values
@@ -331,6 +93,7 @@ Sub CorpBillCitationAdminFees()
     tbl.ListColumns("Unit #").DataBodyRange.FormulaLocal = formula
     tbl.ListColumns("Unit #").DataBodyRange.NumberFormat = "@"
    
+ 
     'functional end----------------------------------------------
    
     Set tbl = tsstotal.ListObjects("tsstotaltable")
@@ -344,7 +107,7 @@ Sub CorpBillCitationAdminFees()
     formula = "=XLOOKUP([@[BA]],accesstable[BA],accesstable[Frequency],0)"
     tbl.ListColumns("Frequency").DataBodyRange.formula = formula
     tbl.ListColumns("Frequency").DataBodyRange.NumberFormat = "@"
-       
+   
     ' Re-enable automatic calculation after macro is done
     Application.Calculation = xlCalculationAutomatic
     Application.EnableEvents = True
@@ -352,7 +115,7 @@ Sub CorpBillCitationAdminFees()
     Application.Calculate
    
     ' Copy the entire table range (including headers)
-    tbl.Range.Copyd
+    tbl.Range.Copy
     ' Paste values only, effectively replacing formulas with their values
     tbl.Range.PasteSpecial Paste:=xlPasteValues
     ' Clear the clipboard (optional)
@@ -360,14 +123,6 @@ Sub CorpBillCitationAdminFees()
     ' AutoFit all columns in the table
     tbl.Range.Columns.AutoFit
    
-    Set tbl = tssfee.ListObjects("tssfeetable")
-    ' Copy the entire table range (including headers)
-    tbl.Range.Copy
-    ' Paste values only, effectively replacing formulas with their values
-    tbl.Range.PasteSpecial Paste:=xlPasteValues
-    ' Clear the clipboard (optional)
-    Application.CutCopyMode = False
-    
     ' AutoFit all columns in the table
     tbl.Range.Columns.AutoFit
     tbl.DataBodyRange.NumberFormat = "@"
@@ -421,4 +176,33 @@ Sub CreateTable(ws As Worksheet, tblName As String)
         .Name = tblName
         .TableStyle = "" ' Apply your preferred style
     End With
+End Sub
+Sub AddColumnsToTable(ws As Worksheet, numColumns As Integer, columnNames As Variant)
+    Dim tbl As ListObject
+    Dim i As Integer
+    Dim newColumn As ListColumn
+   
+    ' Check if table exists on the worksheet
+    On Error Resume Next
+    Set tbl = ws.ListObjects(1)  ' Assuming there is only one table on the sheet
+    On Error GoTo 0
+   
+    ' Add the specified number of columns with the given names
+    For i = 1 To numColumns
+        ' Add the column
+        Set newColumn = tbl.ListColumns.Add
+       
+        ' Set the name for the new column
+        newColumn.Name = columnNames(i - 1)
+    Next i
+End Sub
+Sub SetFormula(ws As Worksheet, colName As String, formula As String)
+    Dim tbl As ListObject
+    Dim col As ListColumn
+   
+    Set tbl = ws.ListObjects(1)
+    Set col = tbl.ListColumns(colName)
+   
+    ' Set formula in the body of the column
+    col.DataBodyRange.formula = formula
 End Sub
