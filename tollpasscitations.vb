@@ -406,3 +406,19 @@ Sub RemoveColumnsByHeaders(ws As Worksheet, headers As Variant)
         End If
     Next col
 End Sub
+' Create a table from a given range and name it
+Sub CreateTable(ws As Worksheet, tblName As String)
+    Dim lastRow As Long
+    Dim lastCol As Long
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+ 
+    Dim tblRange As Range
+    Set tblRange = ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol))
+ 
+    ' Add the table
+    With ws.ListObjects.Add(SourceType:=xlSrcRange, Source:=tblRange, XlListObjectHasHeaders:=xlYes)
+        .Name = tblName
+        .TableStyle = "" ' Apply your preferred style
+    End With
+End Sub
