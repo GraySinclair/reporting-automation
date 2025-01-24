@@ -3,7 +3,10 @@ Sub CorpBillTollAndTCCFees()
     Dim tccfee As Worksheet
     Dim access As Worksheet
     Dim historic As Worksheet
-   
+    'TODO: Add error handling
+    'TODO: Add check to ensure balances match prior to processing data. Throw alert and exit sub if they do not match.
+    'TODO: Trim Unit lookup without checking individual cells
+
     ' PreWork ----------------------------------------
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
